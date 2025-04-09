@@ -1,0 +1,17 @@
+device_id,date,site,depth,variable,temperature,type,comment
+sns_Sp_chlor_2966,2013-06-27T00:00:00Z,Rotoehu_f,NA,fChlor,NA,NA,NA
+sns_ZT_dopto_2558,2011-05-09T00:00:00Z,Rotoehu_f,Surface,"DOpsat, DOconc",NA,Applied by D-optoCom,NA
+sns_ZT_dopto_2559,2011-05-09T00:00:00Z,Rotoehu_f,Bottom,"DOpsat, DOconc",NA,Applied by D-optoCom,NA
+sns_ZT_dopto_2558,2013-07-17T00:00:00Z,Rotoehu_f,Surface,"DOpsat, DOconc",NA,Applied by D-optoCom,NA
+sns_ZT_dopto_2559,2013-07-17T00:00:00Z,Rotoehu_f,Bottom,"DOpsat, DOconc",NA,Applied by D-optoCom,NA
+sns_ZT_dopto_2558,2012-04-13T00:00:00Z,Rotoehu_f,Surface,"DOpsat, DOconc",NA,Applied by D-optoCom,NA
+sns_ZT_dopto_2559,2012-04-13T00:00:00Z,Rotoehu_f,Bottom,"DOpsat, DOconc",NA,Applied by D-optoCom,NA
+sns_CS_isfet_240941,2013-06-27T00:00:00Z,Rotoehu_f,NA,cPH,NA,NA,NA
+sns_CS_isfet_240941,2013-07-19T00:00:00Z,Rotoehu_f,NA,cPH,NA,NA,NA
+sns_CS_isfet_240941,2013-12-18T00:00:00Z,Rotoehu_f,NA,cPH,NA,NA,Not sure if a calibration was actually applied?
+sns_CS_isfet_240941,2014-04-16T00:00:00Z,Rotoehu_f,NA,cPH,NA,NA,NA
+sns_CS_isfet_240941,2015-09-08T00:00:00Z,Rotoehu_f,NA,cPH,NA,NA,NA
+sns_ZT_dopto_2558,2016-03-14T00:00:00Z,Rotoehu_f,Surface,"DOpsat, DOconc",NA,NA,NA
+sns_ZT_dopto_2559,2016-03-14T00:00:00Z,Rotoehu_f,Bottom,"DOpsat, DOconc",NA,NA,NA
+sns_ZT_dopto_2558,2014-04-16T00:00:00Z,Rotoehu_f,Surface,"DOpsat, DOconc",NA,NA,NA
+sns_ZT_dopto_2559,2014-04-16T00:00:00Z,Rotoehu_f,Bottom,"DOpsat, DOconc",NA,NA,NA
