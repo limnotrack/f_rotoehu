@@ -41,6 +41,11 @@ source("R/qc_funs.R")
 
 ```
 
+## Load in metadata
+
+Load metadata about the site, site events, devices, and variables. This includes
+the site location, device IDs, variable names, and sensor calibration data.
+
 ```{r}
 #| label: load-metadata
 #| include: false
