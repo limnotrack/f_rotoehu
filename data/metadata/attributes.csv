@@ -13,11 +13,10 @@ qc_filters.csv,interp,Interpolate values if there is a data gap less than this v
 sensor_calibrations.csv,device_id,Device ID,NA
 sensor_calibrations.csv,date,Date of calibration,NA
 sensor_calibrations.csv,site,Site of measurement,NA
-sensor_calibrations.csv,depth,NA,NA
-sensor_calibrations.csv,variable,NA,NA
-sensor_calibrations.csv,temperature,NA,NA
-sensor_calibrations.csv,type,NA,NA
-sensor_calibrations.csv,comment,NA,NA
+sensor_calibrations.csv,variable,Variable abbreviation,NA
+sensor_calibrations.csv,temperature,Temperature at calibration,NA
+sensor_calibrations.csv,type,Type of calibration,NA
+sensor_calibrations.csv,comment,Comment,NA
 sensor_reference.csv,device_id,Device ID,NA
 sensor_reference.csv,date,Date of reference measurement,NA
 sensor_reference.csv,reference_type,"Type of reference (e.g. buffer, saturated water)",NA
@@ -47,11 +46,11 @@ site_events.csv,site_visit,"Was the site visited, logical value",NA
 site_events.csv,variables,List of variables or can be all,NA
 site_events.csv,action,"Type of action at site such as deployed, removed, cleaned",NA
 site_events.csv,comments,Comment,NA
-variables.csv,type,NA,NA
-variables.csv,abbr,NA,NA
-variables.csv,full_text,NA,NA
-variables.csv,parsed,NA,NA
-variables.csv,label,NA,NA
+variables.csv,type,Type of variable,NA
+variables.csv,abbr,Abbreviation of variable,NA
+variables.csv,full_text,Full text variable name,NA
+variables.csv,parsed,Variable name to be parsed,NA
+variables.csv,label,Label for variable,NA
 rotoehu_qc.csv,datetime,Date and time of measurement,NA
 rotoehu_qc.csv,site,Site of measurement,NA
 rotoehu_qc.csv,t_wtr_d50,Water temperature at 0.5m,degree_Celsius
