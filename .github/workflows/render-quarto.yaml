@@ -35,10 +35,8 @@ jobs:
 
       - name: Install R packages
         run: |
-          install.packages(c(
-            "dplyr", "tidyr", "readr", "lubridate", 
-            "ggplot2", "ggpubr", "readxl", 
-            "scattermore", "sf", "tmap"), dependencies = TRUE)
+          install.packages("remotes")
+          remotes::install_deps(dependencies = TRUE)
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
