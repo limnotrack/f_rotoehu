@@ -68,7 +68,7 @@ sensor_map <- site_devices |>
   select(site, device_id, date_from, date_to) |> 
   left_join(device_var, by = "device_id") |> 
   left_join(device_position, by = "device_id") |>
-  mutate(var_ref_id = generate_var_ref(variable, z_relative, reference)) 
+  mutate(var_ref_id = generate_var_ref(var_abbr, z_relative, reference)) 
 sensor_map
 
 ```
@@ -783,10 +783,6 @@ sensor_refs <- sensor_reference |>
 sensor_scales <- sensor_scaling |> 
   arrange(date) |>
   filter(device_id %in% fluor_sensors$device_id) 
-
-sensor_calibs <- sensor_calibrations |> 
-  filter(device_id %in% fluor_sensors$device_id) 
-
 
 plot_sensor(data = fluor_df, var_ref_id = c("f_chl_d100"),#, "f_phyc_d100"),
             sensor_calibrations = sensor_calibrations, 
@@ -2176,6 +2172,7 @@ for (v in sel_vars) {
 :::
 
 
+
 # Download data
 
 Download the data as a csv file. The data is in long format, with the variable 
@@ -2194,7 +2191,44 @@ path <- "rotoehu_data"
 # Write data and metadata to this directory
 dir.create(path, showWarnings = FALSE)
 
-write_csv(data, file = file.path(path, "rotoehu_qc.csv"), na = "")
+data_qc_wide <- data |> 
+  select(-raw_value, -device_id, -variable) |> 
+  pivot_wider(
+    names_from = var_ref_id,
+    values_from = c(qc_value, qc_code, flag),
+    names_sep = "_"
+  ) 
+col_names <- names(data_qc_wide)
+
+names(data_qc_wide) <- gsub("qc_value_", "", names(data_qc_wide))
+
+
+# Function to extract numeric depth
+extract_depth <- function(x) {
+  as.numeric(sub(".*_d([0-9]+)$", "\\1", x))
+}
+
+# Helper to sort t_wtr columns within a prefix group
+sort_within_group <- function(vec, prefix) {
+  group_idxs <- grep(paste0("^", prefix, "t_wtr_d"), vec)
+  group_vals <- vec[group_idxs]
+  sorted_vals <- group_vals[order(extract_depth(group_vals))]
+  vec[group_idxs] <- sorted_vals
+  vec
+}
+
+# Apply sorting for each group
+new_ord <- col_names
+new_ord <- sort_within_group(new_ord, "qc_value_")
+new_ord <- sort_within_group(new_ord, "qc_code_")
+new_ord <- sort_within_group(new_ord, "flag_")
+new_ord <- gsub("qc_value_", "", new_ord)
+
+# Done!
+new_ord
+data_qc_wide <- data_qc_wide[, new_ord]
+
+write_csv(data_qc_wide, file = file.path(path, "rotoehu_qc.csv"), na = "")
 write_csv(site_events, file = file.path(path, "site_events.csv"), na = "")
 write_csv(site_devices, file = file.path(path, "site_devices.csv"), na = "")
 write_csv(device_var, file = file.path(path, "device_variable.csv"), na = "")
@@ -2211,9 +2245,11 @@ zip(zipfile = "rotoehu_data.zip", files = path)
 piggyback::pb_upload(
   "rotoehu_data.zip",
   repo = "limnotrack/f_rotoehu",
-  tag = "v0.0.1"
+  tag = "v0.0.1", 
+  overwrite = TRUE
 )
 
 ```
 
 <a href="rotoehu_data.zip" download class="btn btn-primary">Download Data</a>
+
