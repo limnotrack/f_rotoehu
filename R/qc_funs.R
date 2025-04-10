@@ -2559,4 +2559,23 @@ plot_temp_drift <- function(data, base_size = 16) {
                     common.legend = TRUE, legend = "bottom")
 } 
 
+plot_site_events <- function(data) {
+  
+  data <- data |> 
+    dplyr::arrange(date) |>
+    dplyr::mutate(index = 1:dplyr::n())
+  
+  
+  ggplot2::ggplot(data = data) +
+    ggplot2::geom_vline(ggplot2::aes(xintercept = date), alpha = 0.2) +
+    ggplot2::geom_text(ggplot2::aes(x = date, y = index, label = comments), 
+                      size = 3, hjust = 0) +
+    ggplot2::theme_bw()+
+    ggplot2::labs(x = "Date", y = "Comments") +
+    # remove y axis labels
+    ggplot2::theme(axis.text.y = ggplot2::element_blank(),
+                   axis.ticks.y = ggplot2::element_blank()) 
+  
+}
+
 
