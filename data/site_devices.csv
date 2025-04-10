@@ -1,13 +1,13 @@
-site,device_id,variable,position,date_from,date_to,Notes_device,Notes,check_device,...10,...11
-f_Rotoehu,sns_Sp_chlor_2966,fChlor,NA,2011-04-20T00:00:00Z,2013-06-26T00:00:00Z,Rotoehu_f,end could be 2012-11-09 as there is a change in the data there,sensor,NA,NA
-f_Rotoehu,sns_TD_c7c_2104444,fChlor,NA,2016-04-29T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f @2016-04,dates deduced from step changes in data,sensor,NA,NA
-f_Rotoehu,sns_Tr_microc_1037,fChlor,NA,2013-06-28T00:00:00Z,2016-04-28T00:00:00Z,"Rotoehu @ 2015-09, 2014-04",dates deduced from step changes in data,sensor,NA,NA
-f_Rotoehu,sns_Tr_microp_102A,fPhyc,NA,2011-04-20T00:00:00Z,2014-12-19T12:45:00Z,"Rotoehu_f @ 2011-05, 2014-04","End picked from data, think sensor was sent for refurbishment?",sensor,NA,NA
-f_Rotoehu,sns_Tr_microp_1035,fPhyc,NA,2014-12-19T13:00:00Z,2022-05-05T00:00:00Z,"Rotorua @ 2011-05, Rotoehu @ 2015-09, 2016-04, 2017-07","Guessing swapped on for 102A after that one failed, possibly on there till the end",sensor,NA,NA
-f_Rotoehu,sns_Vs_wxt510_H4140004,multi,NA,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu,Check if same sensor still on there,sensor,NA,NA
-f_Rotoehu,sns_CS_isfet_240941,pH,NA,2013-06-30T00:00:00Z,2019-12-11T12:15:00Z,Rotoehu @ 2017-06,"start-end picked from data.. Pretty sure same sensor, but maybe check from calibration record",sensor,NA,NA
-f_Rotoehu,sns_Ag_sp110_rotoehu1,rSWD,NA,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f,possibly a sensor change in about 2016? But looks pretty stable overall,sensor,NA,NA
-f_Rotoehu,sns_IS_rdopro_442332,"tWater, cDOpsat, cDOconc",surface,2016-03-28T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f @2016-04,27/11/2015  10:00? QC script says from 2016-04 but ??,sensor,NA,NA
-f_Rotoehu,sns_ZT_dopto_2558,"tWater, cDOpsat, cDOconc",surface,2011-04-20T00:00:00Z,2016-03-02T00:00:00Z,"Rotoehu_f surface @ 2015-09, 2014-06",guess end from data;  27/11/2015  9:45:00 am,sensor,NA,NA
-f_Rotoehu,sns_ZT_dopto_2559,"tWater, cDOpsat, cDOconc",bottom,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,"Rotoehu_f deep @ 2015-09, 2014-06",NA,sensor,NA,NA
-f_Rotoehu,sns_St_tstringds_018,tWater,NA,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f @ 2015-09,NA,sensor,NA,NA
+site,device_id,date_from,date_to,notes_device,notes
+f_Rotoehu,sns_Sp_chlor_2966,2011-04-20T00:00:00Z,2013-06-26T00:00:00Z,Rotoehu_f,end could be 2012-11-09 as there is a change in the data there
+f_Rotoehu,sns_TD_c7c_2104444,2016-04-29T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f @2016-04,dates deduced from step changes in data
+f_Rotoehu,sns_Tr_microc_1037,2013-06-28T00:00:00Z,2016-04-28T00:00:00Z,"Rotoehu @ 2015-09, 2014-04",dates deduced from step changes in data
+f_Rotoehu,sns_Tr_microp_102A,2011-04-20T00:00:00Z,2014-12-19T12:45:00Z,"Rotoehu_f @ 2011-05, 2014-04","End picked from data, think sensor was sent for refurbishment?"
+f_Rotoehu,sns_Tr_microp_1035,2014-12-19T13:00:00Z,2022-05-05T00:00:00Z,"Rotorua @ 2011-05, Rotoehu @ 2015-09, 2016-04, 2017-07","Guessing swapped on for 102A after that one failed, possibly on there till the end"
+f_Rotoehu,sns_Vs_wxt510_H4140004,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu,Check if same sensor still on there
+f_Rotoehu,sns_CS_isfet_240941,2013-06-30T00:00:00Z,2019-12-11T12:15:00Z,Rotoehu @ 2017-06,"start-end picked from data.. Pretty sure same sensor, but maybe check from calibration record"
+f_Rotoehu,sns_Ag_sp110_rotoehu1,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f,possibly a sensor change in about 2016? But looks pretty stable overall
+f_Rotoehu,sns_IS_rdopro_442332,2016-03-28T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f @2016-04,27/11/2015  10:00? QC script says from 2016-04 but ??
+f_Rotoehu,sns_ZT_dopto_2558,2011-04-20T00:00:00Z,2016-03-02T00:00:00Z,"Rotoehu_f surface @ 2015-09, 2014-06",guess end from data;  27/11/2015  9:45:00 am
+f_Rotoehu,sns_ZT_dopto_2559,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,"Rotoehu_f deep @ 2015-09, 2014-06",NA
+f_Rotoehu,sns_St_tstringds_018,2011-04-20T00:00:00Z,2022-05-05T00:00:00Z,Rotoehu_f @ 2015-09,NA
