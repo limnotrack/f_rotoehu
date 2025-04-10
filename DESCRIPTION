@@ -2,10 +2,9 @@ Package: f_rotoehu
 Title: Downloading and processing buoy data
 Version: 1.0.0
 Authors@R: 
-    person(given = "Tadhg",
-           family = "Moore",
-           role = c("aut", "cre"),
-           email = "tadhg"limnotrack.com")
+    person("Tadhg", "Moore", role = c("aut","cre"), 
+            email = "tadhg.moore6@gmail.com", 
+            comment = c(ORCID = "0000-0002-3834-8868"))
 Description: Data product for Lake Rotoehu
 License: MIT + file LICENSE
 Encoding: UTF-8
