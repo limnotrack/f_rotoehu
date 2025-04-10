@@ -93,7 +93,8 @@ piggyback::pb_download(
   file = "rotoehu_sftp_compiled_raw.csv",
   dest = "data-raw/",
   repo = "limnotrack/f_rotoehu",
-  tag = "v0.0.1"
+  tag = "v0.0.1",
+  .token = Sys.getenv("GH_PAT")
 )
 
 dat <- read_csv("data-raw/rotoehu_sftp_compiled_raw.csv") |> 
@@ -743,7 +744,6 @@ plot_flag_ts(raw_long_device_filt)
 #| fig.cap: Check when the buoy was out of the water.
 #| fig.width: 8
 #| fig.height: 10
-site_events
 
 raw_long_device_filt <- raw_long_device_filt |> 
   remove_buoy_out(site_events = site_events) 

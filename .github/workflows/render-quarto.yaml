@@ -9,6 +9,9 @@ on:
 jobs:
   render:
     runs-on: ubuntu-latest
+    
+    env:
+      GH_PAT: ${{ secrets.GH_PAT }}
 
     steps:
       - name: Checkout repo
