@@ -51,14 +51,23 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Render the Quarto doc
-        run: |
-          quarto render rotoehu-qc.qmd --output-dir docs
+      - name: Render and publish to GitHub Pages
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
 
-      - name: Commit rendered file
+      # Discard any uncommitted changes before switching branches
+      - name: Clean working directory
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          git add docs/qa_qc_summary.html
-          git commit -m "Update rendered Quarto doc [skip ci]" || echo "No changes to commit"
-          git push
+          git restore .
+          git clean -fd
+          
+      # Step to reset the gh-pages branch to the latest commit
+      - name: Clean up gh-pages branch history
+        run: |
+          git fetch origin gh-pages
+          git checkout gh-pages
+          git reset --soft $(git commit-tree 'HEAD^{tree}' -m "Clean commit")
+          git push origin gh-pages --force
