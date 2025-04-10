@@ -22,14 +22,14 @@
   "datePublished": null,
   "keywords": "Lake monitoring,High-frequency data,Sensor buoy,Water quality,Meteorological measurements",
   "funder": "Bay of Plenty Regional Council",
-  "temporalCoverage": "27/04/2011/4/05/2022",
+  "temporalCoverage": "2011-04-27/2022-05-04",
   "license": null,
   "spatialCoverage": {
     "type": "Place",
     "name": "Lake Rotoehu in the Bay of Plenty region in New Zealand.",
     "geo": {
       "type": "GeoShape",
-      "box": "-37.9905 176.5496 -38.0365 176.5496"
+      "box": "-37.9905 176.5496 -38.0365 176.5028"
     }
   },
   "variableMeasured": [
