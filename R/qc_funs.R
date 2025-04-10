@@ -223,7 +223,7 @@ decode_var_ref <- function(var_ref, variable_ref = NULL) {
     }
     
     data.frame(
-      variable = variable,
+      var_abbr = variable,
       reference = reference,
       value_m = value_cm / 100  # Convert cm back to meters
     )
@@ -272,7 +272,7 @@ get_filters <- function(filters, site) {
     dplyr::select(-site)
   
   upd_filters <- default_filters |> 
-    dplyr::filter(!variable %in% site_filters$variable) |>
+    dplyr::filter(!var_abbr %in% site_filters$var_abbr) |>
     dplyr::bind_rows(site_filters)
   
   return(upd_filters)
@@ -289,13 +289,13 @@ apply_filters <- function(data, filters) {
   options(dplyr.summarise.inform = FALSE)
   
   # Check all variables in data are in filters
-  if (!all(data$variable %in% filters$var_abbr)) {
+  if (!all(data$var_abbr %in% filters$var_abbr)) {
     # Error and return variables not in filters
-    stop("Variables not in filters: ", paste(setdiff(data$variable, filters$var_abbr), collapse = ", "))
+    stop("Variables not in filters: ", paste(setdiff(data$var_abbr, filters$var_abbr), collapse = ", "))
   }
   
   data <- data |> 
-    dplyr::left_join(filters, by = c("variable" = "var_abbr")) |>
+    dplyr::left_join(filters, by = c("var_abbr" = "var_abbr")) |>
     # low/high filter
     dplyr::mutate(
       # qc_value = value,
@@ -359,11 +359,11 @@ apply_filters <- function(data, filters) {
       )
     ) |> 
     dplyr::ungroup() |> 
-    dplyr::select(datetime, var_ref_id, site, device_id, variable, raw_value,
+    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value,
                   qc_value, flag, qc_code) 
   
   
-  # Print a summary of flags per variable
+  # Print a summary of flags per var_abbr
   p <- plot_flag_summary(data)
   print(p)
   
@@ -796,7 +796,7 @@ adjust_linear_drift <- function(data, var_ref_id, sensor_refs) {
         TRUE ~ qc_code
       )
     ) |> 
-    dplyr::select(datetime, var_ref_id, site, device_id, variable , raw_value, 
+    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr , raw_value, 
                   qc_value, flag, qc_code)
   
   data |> 
@@ -1010,13 +1010,13 @@ adjust_drift_quantiles <- function(data, var_ref_id, adj_period, quantiles = c(0
       drift_correction = time_since_ref * (slope_mean),  # Apply continuous drift correction
       qc_value_corrected = qc_value - drift_correction  # Adjust sensor values
     ) |> 
-    dplyr::select(datetime, var_ref_id, site, device_id, variable, qc_value_corrected)
+    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, qc_value_corrected)
   
   # Merge back with the original data
   upd_data <- data |> 
     dplyr::left_join(adj_data_corrected, by = c("datetime", "var_ref_id", 
                                                 "site", "device_id",
-                                                "variable")) |> 
+                                                "var_abbr")) |> 
     dplyr::mutate(
       qc_value = dplyr::case_when(
         datetime %within% adj_interval ~ qc_value_corrected,
@@ -1031,7 +1031,7 @@ adjust_drift_quantiles <- function(data, var_ref_id, adj_period, quantiles = c(0
         TRUE ~ flag
       )
     ) |> 
-    dplyr::select(datetime, var_ref_id, site, device_id, variable, raw_value, qc_value, flag, qc_code)
+    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, qc_value, flag, qc_code)
   
   return(upd_data)
   
@@ -1151,10 +1151,10 @@ apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
   # Remove the adjusted data from the original dataset and add the adjusted data
   data2 <- data |> 
     dplyr::anti_join(adj_data, by = c("datetime", "var_ref_id", "site", "device_id",
-                                      "variable", "raw_value")) |> 
+                                      "var_abbr", "raw_value")) |> 
     dplyr::bind_rows(adj_data) |> 
     dplyr::arrange(var_ref_id, datetime) |> 
-    dplyr::select(datetime, var_ref_id, site, device_id, variable, raw_value, 
+    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, 
                   qc_value, flag, qc_code)
   return(data2)
   
@@ -1187,7 +1187,7 @@ apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
         TRUE ~ qc_code
       )
     )# |> 
-  # dplyr::select(datetime, var_ref_id, site, device_id, variable, raw_value, 
+  # dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, 
   # qc_value, flag, qc_code)
   
   #   data2 |>
@@ -2179,7 +2179,7 @@ drift_correction <- function(data, var_ref_id, date_range, low, high,
                                       "raw_value")) |>
     dplyr::bind_rows(sub_data) |> 
     dplyr::arrange(var_ref_id, datetime) |> 
-    dplyr::select(datetime, var_ref_id, site, device_id, variable, raw_value, 
+    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, 
                   qc_value, flag, qc_code)
   
   
@@ -2383,7 +2383,7 @@ calc_DOsat_mg <- function(TmpWtr, PrBaro = 1013.25, Slnty = 0) {
 calc_temp_offsets <- function(data) {
   
   temp <- data |> 
-    dplyr::filter(variable == "t_wtr")
+    dplyr::filter(var_abbr == "t_wtr")
   
   # Subset temperature when the variation between top and bottom is less than 1
   # degree
@@ -2433,7 +2433,7 @@ calc_temp_drift <- function(data, date_range,
   # filter data for when temperature differences are minimised
   df_tmpwtr <- data |>
     dplyr::filter(!!sym(col_dt) %within% date_range,
-                  variable == "t_wtr") |>
+                  var_abbr == "t_wtr") |>
     dplyr::mutate(depth = decode_depth(var_ref_id),
                   year = lubridate::year(!!sym(col_dt))) |> 
     dplyr::arrange(!!sym(col_dt), depth) |>

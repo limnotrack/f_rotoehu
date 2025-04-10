@@ -45,6 +45,7 @@ source("R/qc_funs.R")
 #| label: load-metadata
 #| include: false
 #| echo: true
+#| cache: true
 
 site_sel <- "f_Rotoehu"
 site <- read_csv("data/site.csv")
@@ -79,6 +80,7 @@ sensor_map
 #| label: load-data
 #| warning: false
 #| message: false
+#| cache: true
 
 dir.create("data-raw", showWarnings = FALSE)
 # Hydrotel data
@@ -367,7 +369,7 @@ raw_long_device <- sensor_map |>
            is.na(raw_value) ~ "QC 100",
            TRUE ~ "QC 200"
          )) |> 
-  select(site, datetime, device_id, variable, var_ref_id, raw_value, qc_value, 
+  select(site, datetime, device_id, var_abbr, var_ref_id, raw_value, qc_value, 
          flag, qc_code)
 
 head(raw_long_device)
@@ -392,7 +394,7 @@ for (v in sel_vars) {
   
   var_name <- decode_var_ref(var_ref = v, variable_ref = variable_ref)
   
-  cat('## ', paste(var_name$variable, var_name$value_m, "m"), '\n\n')
+  cat('## ', paste(var_name$var_abbr, var_name$value_m, "m"), '\n\n')
   
   p <- plot_sensor(data = raw_long_device, var_ref_id = v,
                    sensor_calibrations = sensor_calibrations, 
@@ -436,7 +438,7 @@ clear_sky <- data.frame(datetime = seq.POSIXt(min(raw_long_device$datetime),
                               control = list(Lz = 180)) * 24*12/0.0864)
 
 swr <- raw_long_device |> 
-  filter(variable == "r_swd") |> 
+  filter(var_abbr == "r_swd") |> 
   left_join(clear_sky, by = "datetime") |>
   mutate(year = year(datetime + ddays(182)),
          doy = yday(datetime + ddays(182)),
@@ -556,8 +558,8 @@ is then mapped onto the reference points and corrected for drift.
 #          value = "qc_value")
 var_ref_id <- "c_phraw_d100"
 ph_count <- raw_long_device |> 
-  filter(variable %in% c("c_phraw", "c_ph")) |>
-  apply_adjustment("c_phraw_d100", FUN = \(x) x / 10) |> 
+  filter(var_abbr %in% c("c_phraw", "c_ph")) |>
+  apply_adjustment(var_ref_id = "c_phraw_d100", FUN = \(x) x / 10) |> 
   scale_data(var_ref_id = "c_ph_d100", sensor_scaling) |> 
   mutate(
     qc_value = case_when(
@@ -613,12 +615,12 @@ Drift corrected pH values
 
 
 ph_raw <- ph_count |> 
-  filter(variable %in% c("c_phraw")) |> 
+  filter(var_abbr %in% c("c_phraw")) |> 
   mutate(new_val = qc_value) |> 
   select(datetime, new_val)
 
 ph <- ph_count |> 
-  filter(variable %in% c("c_ph")) |> 
+  filter(var_abbr %in% c("c_ph")) |> 
   left_join(ph_raw, by = "datetime") |>
   mutate(
     qc_value = case_when(
@@ -628,7 +630,7 @@ ph <- ph_count |>
 
 ph_dc <- ph #ph_count |>
   # filter(!is.na(qc_value) & !duplicated(datetime)) |>
-  # mutate(var_ref_id = "c_ph_d100", variable = "c_ph") 
+  # mutate(var_ref_id = "c_ph_d100", var_abbr = "c_ph") 
 
 any(duplicated(ph_dc$datetime))
 
@@ -650,14 +652,14 @@ ph_dc <- ph_dc |>
   )
 summary(ph_dc)
 
-# viz_data(data = ph_dc, variable = "var_ref_id",
+# viz_data(data = ph_dc, var_abbr = "var_ref_id",
 #          site_events = site_events)
 
 # plotly_data(ph_dc, y1 = "c_ph_d100", sub = 20)
 
 
 ph_orig <- raw_long_device |> 
-  filter(variable %in% c( "c_ph")) |>
+  filter(var_abbr %in% c( "c_ph")) |>
   mutate(
     raw_value = case_when(
       # datetime > as_datetime("2019-04-01") & 
@@ -691,7 +693,7 @@ ggplot() +
 
 raw_long_device2 <- raw_long_device |> 
   # Replace pH values with drift corrected values
-  filter(!variable %in% c("c_ph")) |>
+  filter(!var_abbr %in% c("c_ph")) |>
   bind_rows(ph_dc)
 
 # left_join(ph_dc |> 
@@ -755,14 +757,14 @@ raw_long_device_filt |>
 #| fig.cap: Fluorescence sensors an their associated device ids.
 
 fluor_df <- raw_long_device_filt |> 
-  filter(variable %in% c("f_chl", "f_phyc")) |> 
+  filter(var_abbr %in% c("f_chl", "f_phyc")) |> 
   apply_adjustment("f_chl_d100",
                    FUN = \(x) ifelse(x <= 1, NA, x)) |> 
   apply_adjustment("f_chl_d100",
                    FUN = \(x) ifelse(x >= 499, NA, x))  
 
 
-# viz_data(data = fluor_df, variable = "var_ref_id",
+# viz_data(data = fluor_df, var_abbr = "var_ref_id",
 #          site_events = site_events,
 #          raw_value = "qc_value")
 
@@ -895,7 +897,7 @@ chla <- field |>
   filter(grepl("Chla", Parameter))
 
 ref_times <- raw_long_device_filt |> 
-  filter(variable %in% c("r_swd")) |> 
+  filter(var_abbr %in% c("r_swd")) |> 
   filter(as.Date(datetime) %in% as.Date(chla$Date),
          qc_value < 10
   )
@@ -986,7 +988,7 @@ phyc_corr |>
              sensor_scaling = sensor_scaling,
              clip_ylim = FALSE, colour = "qc_code")
 
-# viz_data(data = phyc_corr, variable = "var_ref_id",
+# viz_data(data = phyc_corr, var_abbr = "var_ref_id",
 #          site_events = site_events,
 #          value = "qc_value")
 ```
@@ -1417,25 +1419,25 @@ pr_baro <- raw_long_device_filt |>
 do_conc2_1m <- left_join(do_1m, temp_1m, by = "datetime") |> 
   left_join(pr_baro, by = "datetime") |> 
   mutate(do_sat_mgL = calc_DOsat_mg(temp, pr_baro),
-         variable = "c_do",
+         var_abbr = "c_do",
          var_ref_id = "c_do2_d100",
          qc_value = qc_value / 100 * do_sat_mgL
   ) |> 
-  select(datetime, var_ref_id, site, device_id, variable, qc_value, flag)
+  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, flag)
 
 do_conc_1m <- raw_long_device_filt |> 
   filter(var_ref_id == "c_do_d100") |> 
-  select(datetime, var_ref_id, site, device_id, variable, raw_value)
+  select(datetime, var_ref_id, site, device_id, var_abbr, raw_value)
 
 # viz_data(data = do_conc_1m, variable = "var_ref_id", value = "qc_value", 
 #          colour = "device_id")
 
 do_conc2_1m <- do_conc2_1m |> 
   mutate(var_ref_id = "c_do_d100") |> 
-  select(datetime, var_ref_id, site, device_id, variable, qc_value,
+  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value,
          flag)
 
-do_conc3_1m <- left_join(do_conc_1m, do_conc2_1m, by = c("datetime", "var_ref_id", "site", "device_id", "variable")) |> 
+do_conc3_1m <- left_join(do_conc_1m, do_conc2_1m, by = c("datetime", "var_ref_id", "site", "device_id", "var_abbr")) |> 
   mutate(
     qc_code = case_when(
       !is.na(qc_value) ~ "QC 300",
@@ -1466,25 +1468,25 @@ do_conc2_10m <- left_join(do_10m, temp_10m, by = "datetime") |>
   left_join(pr_baro, by = "datetime") |> 
   mutate(do_sat_mgL = calc_DOsat_mg(temp, pr_baro),
          var_ref_id = "c_do2_d1000",
-         variable = "c_do",
+         var_abbr = "c_do",
          qc_value = qc_value / 100 * do_sat_mgL,
          qc_code = "QC 300"
   ) |> 
-  select(datetime, var_ref_id, site, device_id, variable, qc_value, qc_code,
+  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, qc_code,
          flag)
 
 do_conc_10m <- raw_long_device_filt |> 
   filter(var_ref_id == "c_do_d1000") |> 
-  select(datetime, var_ref_id, site, device_id, variable, raw_value)
+  select(datetime, var_ref_id, site, device_id, var_abbr, raw_value)
 
 # viz_data(data = do_conc_10m, variable = "var_ref_id", value = "qc_value",
 #          colour = "device_id")
 
 do_conc2_10m <- do_conc2_10m |> 
   mutate(var_ref_id = "c_do_d1000") |> 
-  select(datetime, var_ref_id, site, device_id, variable, qc_value, flag)
+  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, flag)
 
-do_conc3_10m <- left_join(do_conc_10m, do_conc2_10m, by = c("datetime", "var_ref_id", "site", "device_id", "variable")) |> 
+do_conc3_10m <- left_join(do_conc_10m, do_conc2_10m, by = c("datetime", "var_ref_id", "site", "device_id", "var_abbr")) |> 
   mutate(
     qc_code = case_when(
       !is.na(qc_value) ~ "QC 300",
@@ -1525,7 +1527,7 @@ do |>
 ```{r}
 #| label: temperature-sensors-50 
 temp <- raw_long_device_filt |> 
-  filter(variable == "t_wtr") |>
+  filter(var_abbr == "t_wtr") |>
   update_qc_code(var_ref_id = "t_wtr_d50", date_range = c("2011-05-30 13:39:11", "2011-06-01 05:03:55"),
                  value_range = c(10.3, 13.19), filter_type = "both", qc_code = "QC 200") |>
   update_qc_code(var_ref_id = "t_wtr_d50", date_range = c("2011-09-17 04:45:27", "2011-09-22 12:53:17"),
@@ -2032,7 +2034,7 @@ plot_temp_drift(temp_drift)
 #| label: met-assign-qc-codes
 
 met <- raw_long_device_filt |> 
-  filter(variable %in% c("pp_rain", "pr_baro", "r_swd", "t_air", "h_rh", 
+  filter(var_abbr %in% c("pp_rain", "pr_baro", "r_swd", "t_air", "h_rh", 
                          "w_dir", "w_spd")) |> 
   update_qc_code(var_ref_id = "h_rh_h150", date_range = c("2011-03-23 21:43:48", "2022-07-11 16:00:56"), filter_type = "date", qc_code = "QC 600") |>
   update_qc_code(var_ref_id = "pp_rain_h150", date_range = c("2011-03-13 12:21:25", "2022-06-18 23:07:14"), filter_type = "date", qc_code = "QC 600") |>
@@ -2046,6 +2048,8 @@ met <- raw_long_device_filt |>
 
 ```
 
+
+# Visual summaries
 
 ```{r}
 #| label: review-data
@@ -2068,7 +2072,6 @@ data <- bind_rows(temp, do, met, ph_dc, chla_corr, phyc_corr) |>
 
 ```
 
-# Visual summaries
 
 Plot each variable
 
@@ -2158,7 +2161,7 @@ for (v in sel_vars) {
   
   var_name <- decode_var_ref(var_ref = v, variable_ref = variable_ref)
   
-  cat("## ", paste(var_name$variable, var_name$value_m, "m"), "\n\n")
+  cat("## ", paste(var_name$var_abbr, var_name$value_m, "m"), "\n\n")
   
   p <- plot_var_ts_qc(data = data, var_ref_id = v)
   
@@ -2175,10 +2178,7 @@ for (v in sel_vars) {
 
 # Download data
 
-Download the data as a csv file. The data is in long format, with the variable 
-names in the `variable` column and the raw values in the `raw_value` column and
-the QC value `qc_value`. The `qc_code` column contains the quality control codes 
-assigned to each observation.
+Download the data as a csv file. The data is in wide format.
 
 ```{r}
 #| label: write-data-to-file
@@ -2187,12 +2187,15 @@ assigned to each observation.
 
 # Create directory for rotoehu data
 path <- "rotoehu_data"
+unlink(path, recursive = TRUE)
+unlink(paste0(path, ".zip"))
+
 
 # Write data and metadata to this directory
 dir.create(path, showWarnings = FALSE)
 
 data_qc_wide <- data |> 
-  select(-raw_value, -device_id, -variable) |> 
+  select(-raw_value, -device_id, -var_abbr) |> 
   pivot_wider(
     names_from = var_ref_id,
     values_from = c(qc_value, qc_code, flag),
@@ -2228,6 +2231,7 @@ new_ord <- gsub("qc_value_", "", new_ord)
 new_ord
 data_qc_wide <- data_qc_wide[, new_ord]
 
+write_csv(site, file = file.path(path, "sites.csv"), na = "")
 write_csv(data_qc_wide, file = file.path(path, "rotoehu_qc.csv"), na = "")
 write_csv(site_events, file = file.path(path, "site_events.csv"), na = "")
 write_csv(site_devices, file = file.path(path, "site_devices.csv"), na = "")
