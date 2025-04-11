@@ -2578,7 +2578,8 @@ plot_site_events <- function(data) {
   
 }
 
-map_data_to_devices <- function(data, site_devices, device_var, device_position) {
+map_data_to_devices <- function(data, site_devices, device_var, 
+                                device_position, variables = NULL) {
   sensor_map <- site_devices |> 
     dplyr::select(site, device_id, date_from, date_to) |> 
     dplyr::left_join(device_var, by = "device_id") |> 
@@ -2587,6 +2588,13 @@ map_data_to_devices <- function(data, site_devices, device_var, device_position)
     dplyr::mutate(var_ref_id = generate_var_ref(var_abbr, z_relative, 
                                                 reference)) |> 
     dplyr::arrange(var_ref_id, date_from)
+  
+  if (!is.null(variables)) {
+    variables <- variables |> 
+      dplyr::select(abbr, label)
+    sensor_map <- sensor_map |> 
+      dplyr::left_join(variables, by = c("var_abbr" = "abbr"))
+  }
   
   sensor_map |> 
     dplyr::group_by(device_id) |> 
