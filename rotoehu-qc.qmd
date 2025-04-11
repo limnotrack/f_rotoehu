@@ -2217,10 +2217,12 @@ for (v in sel_vars) {
 
 # Download data
 
-Download the data as a csv file. The data is in wide format.
+Download the data as a zip folder. The data is in wide format an comes with
+metadata files. The metadata files contain the information needed to reconstruct
+the quality control.
 
 ```{r}
-#| label: write-data-to-file
+#| label: write-data-to-zip-folder
 #| echo: false
 #| include: false
 
