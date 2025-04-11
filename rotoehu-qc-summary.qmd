@@ -67,23 +67,34 @@ unzip("rotoehu_data.zip")
 
 path <- "rotoehu_data"
 
-site <- read_csv("rotoehu_data/sites.csv")
-site_events <- read_csv("rotoehu_data/site_events.csv")
-site_devices <- read_csv("rotoehu_data/site_devices.csv")
-device_var <- read_csv("rotoehu_data/device_variable.csv")
-device_position <- read_csv("rotoehu_data/device_position.csv")
-sensor_reference <- read_csv("rotoehu_data/sensor_reference.csv")
-sensor_calibrations <- read_csv("rotoehu_data/sensor_calibrations.csv")
-sensor_scaling <- read_csv("rotoehu_data/sensor_scaling.csv")
-variable_ref <- read_csv("rotoehu_data/variables.csv")
-qc_filters <- read_csv("rotoehu_data/qc_filters.csv")
+site <- read_csv("rotoehu_data/sites.csv", col_types = cols())
+site_events <- read_csv("rotoehu_data/site_events.csv", col_types = cols())
+site_devices <- read_csv("rotoehu_data/site_devices.csv", col_types = cols())
+device_var <- read_csv("rotoehu_data/device_variable.csv", col_types = cols())
+device_position <- read_csv("rotoehu_data/device_position.csv", 
+                            col_types = cols())
+sensor_reference <- read_csv("rotoehu_data/sensor_reference.csv",
+                             col_types = cols())
+sensor_calibrations <- read_csv("rotoehu_data/sensor_calibrations.csv", 
+                                col_types = cols())
+sensor_scaling <- read_csv("rotoehu_data/sensor_scaling.csv",
+                           col_types = cols())
+variable_ref <- read_csv("rotoehu_data/variables.csv", col_types = cols())
+qc_filters <- read_csv("rotoehu_data/qc_filters.csv", col_types = cols())
 
 ```
 
 ```{r}
 #| label: read-qc-data
 
-data_wide <- read_csv("rotoehu_data/rotoehu_qc.csv")
+data_wide <- read_csv("rotoehu_data/rotoehu_qc.csv", col_types = cols())
+
+```
+
+Pivot the data to long format and map site devices
+
+```{r}
+#| label: pivot-to-long-map-devices
 
 data <- data_wide |> 
   pivot_longer(
@@ -92,6 +103,7 @@ data <- data_wide |>
     names_pattern = "^(qc_value|qc_code|qc_flag)_(.+)$"
   )
 
+# Map site devices to data
 data <- data |> 
   map_data_to_devices(site_devices = site_devices,
                       device_var = device_var,
