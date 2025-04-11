@@ -27,6 +27,7 @@ library(readxl)
 library(scattermore)
 library(sf)
 library(tmap)
+library(DT)
 
 # Set tmap mode and basemap
 tmap_mode("view")
@@ -586,6 +587,55 @@ plot_var_doy(raw_long_device, "h_rh_h150", FUN = median) +
   geom_hline(yintercept = 100, linetype = "dashed", color = "grey")
 
 ```
+
+# Quality control
+
+We used a set of quality control codes to assess the quality of the data. The
+codes are from the [National Environmental Monitoring Standards (NEMS)](https://www.nems.org.nz/). The codes are 
+as follows:
+
+```{r}
+#| label: qc-codes
+
+qc_codes <- c("Missing Record" = "QC 100",
+              "No Quality or Non Verified" = "QC 200",
+              "Synthetic" = "QC 300",
+              "Poor Quality" = "QC 400",
+              "Fair Quality" = "QC 500",
+              "Good Quality" = "QC 600")
+
+qc_code_col_scale = c(
+  "QC 100" = "#FF0000",
+  "QC 200" = "#8B5A00",
+  "QC 300" = "#D3D3D3",
+  "QC 400" = "#FFA500",
+  "QC 500" = "#00BFFF",
+  "QC 600" = "#006400"
+)
+
+qc_df <- data.frame(
+  qc_code = qc_codes,
+  qc_zone = names(qc_codes),
+  qc_code_col = unname(qc_code_col_scale),
+  stringsAsFactors = FALSE
+)
+
+qc_df |> 
+  datatable(rownames = FALSE,
+            options = list(
+              pageLength = 6,
+              dom = "t",
+              columnDefs = list(list(className = 'dt-center', targets = "_all"))
+            )
+  ) |> 
+  formatStyle(
+    'qc_code_col',
+    target = 'row',
+    backgroundColor = styleEqual(qc_code_col_scale, qc_code_col_scale)
+  )
+  
+```
+
 
 
 # pH standardisation
