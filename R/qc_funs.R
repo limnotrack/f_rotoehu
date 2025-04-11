@@ -278,9 +278,9 @@ get_filters <- function(filters, site) {
   return(upd_filters)
 }
 
-# Function to format flag
-format_flag <- function(flag, new_flag) {
-  dplyr::if_else(flag == "" | is.na(flag), new_flag, paste0(flag, "|", new_flag))
+# Function to format qc_flag
+format_flag <- function(qc_flag, new_flag) {
+  dplyr::if_else(qc_flag == "" | is.na(qc_flag), new_flag, paste0(qc_flag, "|", new_flag))
 }
 
 # Function to apply filters to data
@@ -299,19 +299,19 @@ apply_filters <- function(data, filters) {
     # low/high filter
     dplyr::mutate(
       # qc_value = value,
-      flag = dplyr::case_when(
-        qc_value < low ~ format_flag(flag, "low"),
-        qc_value > high ~ format_flag(flag, "high"),
-        TRUE ~ flag
+      qc_flag = dplyr::case_when(
+        qc_value < low ~ format_flag(qc_flag, "low"),
+        qc_value > high ~ format_flag(qc_flag, "high"),
+        TRUE ~ qc_flag
       ),
       qc_value = dplyr::case_when(
-        grepl("low", flag) ~ NA_real_,
-        grepl("high", flag) ~ NA_real_,
+        grepl("low", qc_flag) ~ NA_real_,
+        grepl("high", qc_flag) ~ NA_real_,
         TRUE ~ qc_value
       ),
       qc_code = dplyr::case_when(
-        grepl("low", flag) ~ "QC 200",
-        grepl("high", flag) ~ "QC 200",
+        grepl("low", qc_flag) ~ "QC 200",
+        grepl("high", qc_flag) ~ "QC 200",
         TRUE ~ qc_code
       )
     ) |> 
@@ -321,16 +321,16 @@ apply_filters <- function(data, filters) {
     dplyr::mutate(value_roc = c(NA, abs(diff(qc_value, lag = 1, 
                                              na.pad = TRUE)))) |> 
     dplyr::mutate(
-      flag = dplyr::case_when(
-        value_roc > roc ~ format_flag(flag, "roc"),
-        TRUE ~ flag
+      qc_flag = dplyr::case_when(
+        value_roc > roc ~ format_flag(qc_flag, "roc"),
+        TRUE ~ qc_flag
       ),
       qc_value = dplyr::case_when(
-        grepl("roc", flag) ~ NA_real_,
+        grepl("roc", qc_flag) ~ NA_real_,
         TRUE ~ qc_value
       ),
       qc_code = dplyr::case_when(
-        grepl("roc", flag) ~ "QC 200",
+        grepl("roc", qc_flag) ~ "QC 200",
         TRUE ~ qc_code
       )
     ) |> 
@@ -345,22 +345,22 @@ apply_filters <- function(data, filters) {
       # Calculate the length of each consecutive sequence
       seq_length = ave(value_clean, grp, FUN = length),
       
-      flag = dplyr::case_when(
-        seq_length > consec ~ format_flag(flag, "consec"),
-        TRUE ~ flag
+      qc_flag = dplyr::case_when(
+        seq_length > consec ~ format_flag(qc_flag, "consec"),
+        TRUE ~ qc_flag
       ),
       qc_value = dplyr::case_when(
-        grepl("consec", flag) ~ NA_real_,
+        grepl("consec", qc_flag) ~ NA_real_,
         TRUE ~ qc_value
       ),
       qc_code = dplyr::case_when(
-        grepl("consec", flag) ~ "QC 200",
+        grepl("consec", qc_flag) ~ "QC 200",
         TRUE ~ qc_code
       )
     ) |> 
     dplyr::ungroup() |> 
     dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value,
-                  qc_value, flag, qc_code) 
+                  qc_value, qc_flag, qc_code) 
   
   
   # Print a summary of flags per var_abbr
@@ -370,23 +370,23 @@ apply_filters <- function(data, filters) {
   return(data)
 }
 
-# Function for plotting flag summary
+# Function for plotting qc_flag summary
 plot_flag_summary <- function(data) {
   
-  # Check if var_ref_id and flag columns exist
-  if (!all(c("var_ref_id", "flag") %in% colnames(data))) {
-    stop("data must contain columns 'var_ref_id' and 'flag'")
+  # Check if var_ref_id and qc_flag columns exist
+  if (!all(c("var_ref_id", "qc_flag") %in% colnames(data))) {
+    stop("data must contain columns 'var_ref_id' and 'qc_flag'")
   }
   
   data |> 
-    dplyr::filter(flag != "") |> 
-    dplyr::group_by(var_ref_id, flag) |>
+    dplyr::filter(qc_flag != "") |> 
+    dplyr::group_by(var_ref_id, qc_flag) |>
     dplyr::summarise(n = n()) |> 
     dplyr::mutate(var_ref_id = factor(var_ref_id)) |> 
     # print(n = 100)
     
     ggplot2::ggplot() +
-    ggplot2::geom_bar(ggplot2::aes(x = var_ref_id, y = n, fill = flag), stat = "identity") +
+    ggplot2::geom_bar(ggplot2::aes(x = var_ref_id, y = n, fill = qc_flag), stat = "identity") +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
     ggplot2::labs(title = "Flag summary", x = "var_ref_id", y = "Count") +
     ggplot2::coord_flip()  +
@@ -399,21 +399,21 @@ plot_flag_summary <- function(data) {
   
 }
 
-# Function for plotting flag timeseries
+# Function for plotting qc_flag timeseries
 plot_flag_ts <- function(data) {
   
-  # Check if datetime and flag columns exist
-  if (!all(c("datetime", "flag") %in% colnames(data))) {
-    stop("data must contain columns 'datetime' and 'flag'")
+  # Check if datetime and qc_flag columns exist
+  if (!all(c("datetime", "qc_flag") %in% colnames(data))) {
+    stop("data must contain columns 'datetime' and 'qc_flag'")
   }
   
   data |> 
-    dplyr::filter(flag != "") |> 
+    dplyr::filter(qc_flag != "") |> 
     dplyr::slice(1:500000) |>
     ggplot2::ggplot() +
     scattermore::geom_scattermore(ggplot2::aes(x = datetime, y = var_ref_id, 
-                                               colour = flag), pointsize = 3) +
-    # ggplot2::geom_point(ggplot2::aes(x = datetime, y = var_ref_id, colour = flag), 
+                                               colour = qc_flag), pointsize = 3) +
+    # ggplot2::geom_point(ggplot2::aes(x = datetime, y = var_ref_id, colour = qc_flag), 
     #                     size = 2) +
     ggplot2::theme_minimal() +
     ggplot2::labs(title = "Flag timeseries", x = "Datetime", y = "Variable") #+
@@ -442,13 +442,13 @@ plot_qc_data <- function(data) {
   
   data |> 
     # dplyr::slice(1:500000) |>
-    dplyr::filter(flag %in% c("", "drift_corr")) |> 
+    dplyr::filter(qc_flag %in% c("", "drift_corr")) |> 
     ggplot2::ggplot() +
     scattermore::geom_scattermore(ggplot2::aes(x = datetime, y = qc_value,
-                                               colour = flag), pointsize = 1) +
+                                               colour = qc_flag), pointsize = 1) +
     scattermore::geom_scattermore(data = flag_summ, ggplot2::aes(x = datetime, 
                                                                  y = y_min, 
-                                                                 colour = flag), 
+                                                                 colour = qc_flag), 
                                   pointsize = 4) +
     ggplot2::facet_wrap(~var_ref_id, scales = "free_y") +
     ggplot2::theme_minimal() +
@@ -652,10 +652,10 @@ remove_buoy_out <- function(data, site_events) {
         datetime %within% site_dates$date_interval ~ NA_real_,
         TRUE ~ qc_value
       ),
-      flag = dplyr::case_when(
-        datetime %within% site_dates$date_interval ~ format_flag(flag,
+      qc_flag = dplyr::case_when(
+        datetime %within% site_dates$date_interval ~ format_flag(qc_flag,
                                                                  "buoy_out"),
-        TRUE ~ flag
+        TRUE ~ qc_flag
       )
     )
   
@@ -786,10 +786,10 @@ adjust_linear_drift <- function(data, var_ref_id, sensor_refs) {
           (slope * qc_value),
         TRUE ~ qc_value
       ),
-      flag = dplyr::case_when(
+      qc_flag = dplyr::case_when(
         var_ref_id == sel_var & datetime %within% date_interval ~
-          format_flag(flag, "drift_corr"),
-        TRUE ~ flag
+          format_flag(qc_flag, "drift_corr"),
+        TRUE ~ qc_flag
       ),
       qc_code = dplyr::case_when(
         var_ref_id == sel_var & datetime %within% date_interval ~ "QC 300",
@@ -797,7 +797,7 @@ adjust_linear_drift <- function(data, var_ref_id, sensor_refs) {
       )
     ) |> 
     dplyr::select(datetime, var_ref_id, site, device_id, var_abbr , raw_value, 
-                  qc_value, flag, qc_code)
+                  qc_value, qc_flag, qc_code)
   
   data |> 
     mutate(diff = qc_value - raw_value) |>
@@ -1026,12 +1026,12 @@ adjust_drift_quantiles <- function(data, var_ref_id, adj_period, quantiles = c(0
         datetime %within% adj_interval ~ "QC 300",
         TRUE ~ qc_code
       ),
-      flag = dplyr::case_when(
-        datetime %within% adj_interval ~ format_flag(flag, "drift_corr"),
-        TRUE ~ flag
+      qc_flag = dplyr::case_when(
+        datetime %within% adj_interval ~ format_flag(qc_flag, "drift_corr"),
+        TRUE ~ qc_flag
       )
     ) |> 
-    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, qc_value, flag, qc_code)
+    dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, qc_value, qc_flag, qc_code)
   
   return(upd_data)
   
@@ -1101,7 +1101,7 @@ extract_signal <- function(data, var_ref_id, date_range, width = "5 day", thresh
 
 # Function to adjust variables
 apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
-                             flag = "adjusted") {
+                             qc_flag = "adjusted") {
   
   tzone <- lubridate::tz(data$datetime)
   if (missing(date_range)) {
@@ -1114,7 +1114,7 @@ apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
   
   sel_vars <- var_ref_id
   
-  flag_inp <- flag
+  flag_inp <- qc_flag
   
   adj_data <- data |> 
     dplyr::filter(datetime %within% date_range & var_ref_id %in% sel_vars) |> 
@@ -1132,9 +1132,9 @@ apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
         TRUE ~ "unchanged"
       ),
       
-      flag = dplyr::case_when(
-        check == "adjusted" ~ format_flag(flag, flag_inp),
-        TRUE ~ flag
+      qc_flag = dplyr::case_when(
+        check == "adjusted" ~ format_flag(qc_flag, flag_inp),
+        TRUE ~ qc_flag
       ),
       qc_code = dplyr::case_when(
         check == "adjusted" & !is.na(qc_value) & flag_inp == "adjusted" ~ "QC 300",
@@ -1155,7 +1155,7 @@ apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
     dplyr::bind_rows(adj_data) |> 
     dplyr::arrange(var_ref_id, datetime) |> 
     dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, 
-                  qc_value, flag, qc_code)
+                  qc_value, qc_flag, qc_code)
   return(data2)
   
   data2 <- data2 |> 
@@ -1177,9 +1177,9 @@ apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
         TRUE ~ "unchanged"
       ),
       
-      flag = dplyr::case_when(
-        check == "adjusted" ~ format_flag(flag, flag_inp),
-        TRUE ~ flag
+      qc_flag = dplyr::case_when(
+        check == "adjusted" ~ format_flag(qc_flag, flag_inp),
+        TRUE ~ qc_flag
       ),
       qc_code = dplyr::case_when(
         check == "adjusted" & !is.na(qc_value) ~ "QC 300",
@@ -1188,7 +1188,7 @@ apply_adjustment <- function(data, var_ref_id, date_range, FUN = \(x) x,
       )
     )# |> 
   # dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, 
-  # qc_value, flag, qc_code)
+  # qc_value, qc_flag, qc_code)
   
   #   data2 |>
   #     filter(orig_value < 0, datetime %within% date_range & var_ref_id %in% sel_vars )
@@ -2155,9 +2155,9 @@ drift_correction <- function(data, var_ref_id, date_range, low, high,
         qc_value != corr_value ~ "QC 300",
         TRUE ~ qc_code
       ),
-      flag = dplyr::case_when(
-        qc_value != corr_value ~ format_flag(flag, "drift_corr"),
-        TRUE ~ flag
+      qc_flag = dplyr::case_when(
+        qc_value != corr_value ~ format_flag(qc_flag, "drift_corr"),
+        TRUE ~ qc_flag
       )
     )
   
@@ -2180,7 +2180,7 @@ drift_correction <- function(data, var_ref_id, date_range, low, high,
     dplyr::bind_rows(sub_data) |> 
     dplyr::arrange(var_ref_id, datetime) |> 
     dplyr::select(datetime, var_ref_id, site, device_id, var_abbr, raw_value, 
-                  qc_value, flag, qc_code)
+                  qc_value, qc_flag, qc_code)
   
   
 }
@@ -2226,9 +2226,9 @@ plot_drift_correction <- function(data, var_ref_id, date_range, low, high) {
           qc_value != corr_value ~ "QC 300",
           TRUE ~ qc_code
         ),
-        flag = dplyr::case_when(
-          qc_value != corr_value ~ format_flag(flag, "drift_corr"),
-          TRUE ~ flag
+        qc_flag = dplyr::case_when(
+          qc_value != corr_value ~ format_flag(qc_flag, "drift_corr"),
+          TRUE ~ qc_flag
         )
       )
   }
@@ -2578,11 +2578,24 @@ plot_site_events <- function(data) {
   
 }
 
-map_site_devices <- function(site_devices, device_var, device_position) {
-  site_devices |> 
+map_data_to_devices <- function(data, site_devices, device_var, device_position) {
+  sensor_map <- site_devices |> 
     dplyr::select(site, device_id, date_from, date_to) |> 
     dplyr::left_join(device_var, by = "device_id") |> 
-    dplyr::left_join(device_position, by = "device_id") |>
+    dplyr::left_join(device_position, by = "device_id", 
+                     relationship = "many-to-many") |>
     dplyr::mutate(var_ref_id = generate_var_ref(var_abbr, z_relative, 
-                                                reference)) 
+                                                reference)) |> 
+    dplyr::arrange(var_ref_id, date_from)
+  
+  sensor_map |> 
+    dplyr::group_by(device_id) |> 
+    dplyr::left_join(data, by = c("var_ref_id", "site"), 
+                     relationship = "many-to-many") |>
+    dplyr::filter(datetime >= date_from & datetime <= date_to) |> 
+    dplyr::ungroup() |> 
+    dplyr::arrange(var_ref_id, datetime) |> 
+    dplyr::select(-c(date_from, date_to, reference, z_relative))
+  
 }
+
