@@ -29,6 +29,7 @@ library(readxl)
 library(scattermore)
 library(sf)
 library(tmap)
+library(DT)
 
 # Set tmap mode and basemap
 tmap_mode("view")
@@ -232,23 +233,6 @@ plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
 
 ```
 
-## Temperature
-
-```{r}
-#| label: fig-temp-doy-qc
-#| fig.cap: "Temperature data at various depths quality control."
-#| warning: false
-#| message: false
-#| fig.width: 14
-#| fig.height: 10
-
-plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
-                                         "t_wtr_d1050", "t_wtr_d150",
-                                         "t_wtr_d300", "t_wtr_d50",
-                                         "t_wtr_d500", "t_wtr_d700", 
-                                         "t_wtr_d900"))
-
-```
 
 ## Oxygen saturation
 
