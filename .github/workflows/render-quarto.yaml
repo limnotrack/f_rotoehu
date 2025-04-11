@@ -5,6 +5,7 @@ on:
     paths:
       - 'rotoehu-qc.qmd'
       - '.github/workflows/render-quarto.yaml'
+      - 'rotoehu-qc-summary.qmd'
 
 jobs:
   render:
