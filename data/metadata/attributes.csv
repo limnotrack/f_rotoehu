@@ -53,29 +53,29 @@ variables.csv,parsed,Variable name to be parsed,NA
 variables.csv,label,Label for variable,NA
 rotoehu_qc.csv,datetime,Date and time of measurement,NA
 rotoehu_qc.csv,site,Site of measurement,NA
-rotoehu_qc.csv,t_wtr_d50,Water temperature at 0.5m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d100,Water temperature at 1.0m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d150,Water temperature at 1.5m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d300,Water temperature at 3.0m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d500,Water temperature at 5.0m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d700,Water temperature at 7.0m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d900,Water temperature at 9.0m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d1000,Water temperature at 10.0m,degree_Celsius
-rotoehu_qc.csv,t_wtr_d1050,Water temperature at 10.5m,degree_Celsius
-rotoehu_qc.csv,c_do_sat_d100,Dissolved oxygen percent saturation at 1.0m,percent
-rotoehu_qc.csv,c_do_sat_d1000,Dissolved oxygen percent saturation at 10.0m,percent
-rotoehu_qc.csv,c_do_d100,Dissolved oxygen concentration at 1.0m,mg/l
-rotoehu_qc.csv,c_do_d1000,Dissolved oxygen concentration at 10.0m,mg/l
-rotoehu_qc.csv,r_swd_h150,Shortwave radiation at 1.5m,W/m2
-rotoehu_qc.csv,t_air_h150,Air temperature at 1.5m,degree_Celsius
-rotoehu_qc.csv,pr_baro_h150,Barometric pressure at 1.5m,hPa
-rotoehu_qc.csv,h_rh_h150,Relative humidity at 1.5m,percent
-rotoehu_qc.csv,w_spd_h150,Wind speed at 1.5m,m/s
-rotoehu_qc.csv,w_dir_h150,Wind direction at 1.5m,degree
-rotoehu_qc.csv,pp_rain_h150,Rainfall at 1.5m,mm
-rotoehu_qc.csv,c_ph_d100,pH at 1.0m,-
-rotoehu_qc.csv,f_chl_d100,Chlorophyll fluorescence at 1.0m,RFU
-rotoehu_qc.csv,f_phyc_d100,Phyocyanin fluorescence at 1.0m,RFU
+rotoehu_qc.csv,qc_value_t_wtr_d50,Water temperature at 0.5m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d100,Water temperature at 1.0m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d150,Water temperature at 1.5m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d300,Water temperature at 3.0m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d500,Water temperature at 5.0m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d700,Water temperature at 7.0m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d900,Water temperature at 9.0m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d1000,Water temperature at 10.0m,degree_Celsius
+rotoehu_qc.csv,qc_value_t_wtr_d1050,Water temperature at 10.5m,degree_Celsius
+rotoehu_qc.csv,qc_value_c_do_sat_d100,Dissolved oxygen percent saturation at 1.0m,percent
+rotoehu_qc.csv,qc_value_c_do_sat_d1000,Dissolved oxygen percent saturation at 10.0m,percent
+rotoehu_qc.csv,qc_value_c_do_d100,Dissolved oxygen concentration at 1.0m,mg/l
+rotoehu_qc.csv,qc_value_c_do_d1000,Dissolved oxygen concentration at 10.0m,mg/l
+rotoehu_qc.csv,qc_value_r_swd_h150,Shortwave radiation at 1.5m,W/m2
+rotoehu_qc.csv,qc_value_t_air_h150,Air temperature at 1.5m,degree_Celsius
+rotoehu_qc.csv,qc_value_pr_baro_h150,Barometric pressure at 1.5m,hPa
+rotoehu_qc.csv,qc_value_h_rh_h150,Relative humidity at 1.5m,percent
+rotoehu_qc.csv,qc_value_w_spd_h150,Wind speed at 1.5m,m/s
+rotoehu_qc.csv,qc_value_w_dir_h150,Wind direction at 1.5m,degree
+rotoehu_qc.csv,qc_value_pp_rain_h150,Rainfall at 1.5m,mm
+rotoehu_qc.csv,qc_value_c_ph_d100,pH at 1.0m,-
+rotoehu_qc.csv,qc_value_f_chl_d100,Chlorophyll fluorescence at 1.0m,RFU
+rotoehu_qc.csv,qc_value_f_phyc_d100,Phyocyanin fluorescence at 1.0m,RFU
 rotoehu_qc.csv,qc_code_t_wtr_d50,Quality control code for Water temperature at 0.5m,NA
 rotoehu_qc.csv,qc_code_t_wtr_d100,Quality control code for Water temperature at 1.0m,NA
 rotoehu_qc.csv,qc_code_t_wtr_d150,Quality control code for Water temperature at 1.5m,NA
@@ -99,26 +99,26 @@ rotoehu_qc.csv,qc_code_pp_rain_h150,Quality control code for Rainfall at 1.5m,NA
 rotoehu_qc.csv,qc_code_c_ph_d100,Quality control code for pH at 1.0m,NA
 rotoehu_qc.csv,qc_code_f_chl_d100,Quality control code for Chlorophyll fluorescence at 1.0m,NA
 rotoehu_qc.csv,qc_code_f_phyc_d100,Quality control code for Phyocyanin fluorescence at 1.0m,NA
-rotoehu_qc.csv,flag_t_wtr_d50,Flag for Water temperature at 0.5m,NA
-rotoehu_qc.csv,flag_t_wtr_d100,Flag for Water temperature at 1.0m,NA
-rotoehu_qc.csv,flag_t_wtr_d150,Flag for Water temperature at 1.5m,NA
-rotoehu_qc.csv,flag_t_wtr_d300,Flag for Water temperature at 3.0m,NA
-rotoehu_qc.csv,flag_t_wtr_d500,Flag for Water temperature at 5.0m,NA
-rotoehu_qc.csv,flag_t_wtr_d700,Flag for Water temperature at 7.0m,NA
-rotoehu_qc.csv,flag_t_wtr_d900,Flag for Water temperature at 9.0m,NA
-rotoehu_qc.csv,flag_t_wtr_d1000,Flag for Water temperature at 10.0m,NA
-rotoehu_qc.csv,flag_t_wtr_d1050,Flag for Water temperature at 10.5m,NA
-rotoehu_qc.csv,flag_c_do_sat_d100,Flag for Dissolved oxygen percent saturation at 1.0m,NA
-rotoehu_qc.csv,flag_c_do_sat_d1000,Flag for Dissolved oxygen percent saturation at 10.0m,NA
-rotoehu_qc.csv,flag_c_do_d100,Flag for Dissolved oxygen concentration at 1.0m,NA
-rotoehu_qc.csv,flag_c_do_d1000,Flag for Dissolved oxygen concentration at 10.0m,NA
-rotoehu_qc.csv,flag_r_swd_h150,Flag for Shortwave radiation at 1.5m,NA
-rotoehu_qc.csv,flag_t_air_h150,Flag for Air temperature at 1.5m,NA
-rotoehu_qc.csv,flag_pr_baro_h150,Flag for Barometric pressure at 1.5m,NA
-rotoehu_qc.csv,flag_h_rh_h150,Flag for Relative humidity at 1.5m,NA
-rotoehu_qc.csv,flag_w_spd_h150,Flag for Wind speed at 1.5m,NA
-rotoehu_qc.csv,flag_w_dir_h150,Flag for Wind direction at 1.5m,NA
-rotoehu_qc.csv,flag_pp_rain_h150,Flag for Rainfall at 1.5m,NA
-rotoehu_qc.csv,flag_c_ph_d100,Flag for pH at 1.0m,NA
-rotoehu_qc.csv,flag_f_chl_d100,Flag for Chlorophyll fluorescence at 1.0m,NA
-rotoehu_qc.csv,flag_f_phyc_d100,Flag for Phyocyanin fluorescence at 1.0m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d50,Flag for Water temperature at 0.5m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d100,Flag for Water temperature at 1.0m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d150,Flag for Water temperature at 1.5m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d300,Flag for Water temperature at 3.0m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d500,Flag for Water temperature at 5.0m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d700,Flag for Water temperature at 7.0m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d900,Flag for Water temperature at 9.0m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d1000,Flag for Water temperature at 10.0m,NA
+rotoehu_qc.csv,qc_flag_t_wtr_d1050,Flag for Water temperature at 10.5m,NA
+rotoehu_qc.csv,qc_flag_c_do_sat_d100,Flag for Dissolved oxygen percent saturation at 1.0m,NA
+rotoehu_qc.csv,qc_flag_c_do_sat_d1000,Flag for Dissolved oxygen percent saturation at 10.0m,NA
+rotoehu_qc.csv,qc_flag_c_do_d100,Flag for Dissolved oxygen concentration at 1.0m,NA
+rotoehu_qc.csv,qc_flag_c_do_d1000,Flag for Dissolved oxygen concentration at 10.0m,NA
+rotoehu_qc.csv,qc_flag_r_swd_h150,Flag for Shortwave radiation at 1.5m,NA
+rotoehu_qc.csv,qc_flag_t_air_h150,Flag for Air temperature at 1.5m,NA
+rotoehu_qc.csv,qc_flag_pr_baro_h150,Flag for Barometric pressure at 1.5m,NA
+rotoehu_qc.csv,qc_flag_h_rh_h150,Flag for Relative humidity at 1.5m,NA
+rotoehu_qc.csv,qc_flag_w_spd_h150,Flag for Wind speed at 1.5m,NA
+rotoehu_qc.csv,qc_flag_w_dir_h150,Flag for Wind direction at 1.5m,NA
+rotoehu_qc.csv,qc_flag_pp_rain_h150,Flag for Rainfall at 1.5m,NA
+rotoehu_qc.csv,qc_flag_c_ph_d100,Flag for pH at 1.0m,NA
+rotoehu_qc.csv,qc_flag_f_chl_d100,Flag for Chlorophyll fluorescence at 1.0m,NA
+rotoehu_qc.csv,qc_flag_f_phyc_d100,Flag for Phyocyanin fluorescence at 1.0m,NA
