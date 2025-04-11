@@ -1,7 +1,9 @@
 ---
 title: "Lake Rotoehu fixed buoy data"
-format: html
-page-layout: full
+format:
+  html:
+    title-block: false
+page-layout: article
 ---
 
 <script type="application/ld+json">
@@ -29,7 +31,7 @@ page-layout: full
   "datePublished": null,
   "keywords": ["lake monitoring", "high-frequency data", "sensor buoy", "water quality", "meteorological measurements"],
   "funder": "Bay of Plenty Regional Council",
-  "temporalCoverage": "2011-04-27/2022-05-04",
+  "temporalCoverage": "2011-04-27 01:00:00/2022-05-04 13:00:00",
   "license": null,
   "spatialCoverage": {
     "type": "Place",
@@ -856,11 +858,11 @@ page-layout: full
 <table class="listing">
   <tr>
     <td>Begin</td>
-    <td>2011-04-27</td>
+    <td>2011-04-27 01:00:00</td>
   </tr>
   <tr>
     <td>End</td>
-    <td>2022-05-04</td>
+    <td>2022-05-04 13:00:00</td>
   </tr>
 </table>
 
