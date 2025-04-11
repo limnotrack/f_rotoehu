@@ -2172,7 +2172,6 @@ Plot each variable
 #| fig.cap: "Temperature data at various depths quality control."
 #| warning: false
 #| message: false
-#| fig.width: 14
 #| fig.height: 10
 
 plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
@@ -2341,9 +2340,13 @@ write_csv(data_qc_wide, file = file.path(path, "rotoehu_qc.csv"), na = "")
 write_csv(site_events, file = file.path(path, "site_events.csv"), na = "")
 write_csv(site_devices, file = file.path(path, "site_devices.csv"), na = "")
 write_csv(device_var, file = file.path(path, "device_variable.csv"), na = "")
-write_csv(device_position, file = file.path(path, "device_position.csv"), na = "")
-write_csv(sensor_reference, file = file.path(path, "sensor_reference.csv"), na = "")
-write_csv(sensor_calibrations, file = file.path(path, "sensor_calibrations.csv"), na = "")
+write_csv(device_position, file = file.path(path, "device_position.csv"),
+          na = "")
+write_csv(sensor_reference, file = file.path(path, "sensor_reference.csv"), 
+          na = "")
+write_csv(sensor_calibrations, file = file.path(path, 
+                                                "sensor_calibrations.csv"), 
+          na = "")
 write_csv(sensor_scaling, file = file.path(path, "sensor_scaling.csv"), na = "")
 write_csv(variable_ref, file = file.path(path, "variables.csv"), na = "")
 write_csv(qc_filters, file = file.path(path, "qc_filters.csv"), na = "")
