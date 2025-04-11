@@ -2299,14 +2299,22 @@ write_csv(qc_filters, file = file.path(path, "qc_filters.csv"), na = "")
 # zip the folder into a zip folder
 zip(zipfile = "rotoehu_data.zip", files = path)
 
+```
+
+```{r}
+#| label: upload-data-github
+#| include: false
+#| echo: false
+
 piggyback::pb_upload(
   "rotoehu_data.zip",
   repo = "limnotrack/f_rotoehu",
   tag = "v0.0.1", 
-  overwrite = TRUE
+  overwrite = TRUE, 
+  .token = Sys.getenv("GH_PAT")
 )
-
 ```
+
 
 <a href="rotoehu_data.zip" download class="btn btn-primary">Download Data</a>
 
