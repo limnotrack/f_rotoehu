@@ -22,7 +22,7 @@
   "datePublished": null,
   "keywords": ["lake monitoring", "high-frequency data", "sensor buoy", "water quality", "meteorological measurements"],
   "funder": "Bay of Plenty Regional Council",
-  "temporalCoverage": "2011-04-27/2022-05-04",
+  "temporalCoverage": "2011-04-27 01:00:00/2022-05-04 13:00:00",
   "license": null,
   "spatialCoverage": {
     "type": "Place",
