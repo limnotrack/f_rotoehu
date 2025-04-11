@@ -550,16 +550,22 @@ Over the entire period, the relative humidity sensor appears to have drifted
 in the middle of the time period.
 
 ```{r}
-#| label: fig-rh-drift
+#| label: rh-drift
 #| warning: false
 #| message: false
-#| fig.cap: Relative humidity drift.
 
 raw_long_device |> 
   filter(var_ref_id == "h_rh_h150") |> 
   summary()
 
-# plotly_data(raw_long_device, y1 = "h_rh_h150", sub = 20)
+```
+
+```{r}
+#| label: fig-rh-drift
+#| warning: false
+#| message: false
+#| fig.cap: Relative humidity drift.
+
 plot_sensor(data = raw_long_device, var_ref_id = "h_rh_h150",
             sensor_calibrations = sensor_calibrations,
             sensor_reference = sensor_reference,
@@ -571,10 +577,15 @@ plot_sensor(data = raw_long_device, var_ref_id = "h_rh_h150",
 However, when we plot each year separately, the sensor drift is not so clear.
 
 ```{r}
+#| label: fig-rh-drift-yearly
+#| warning: false
+#| message: false
+#| fig.cap: Relative humidity drift by year.
+
 plot_var_doy(raw_long_device, "h_rh_h150", FUN = median) +
   geom_hline(yintercept = 100, linetype = "dashed", color = "grey")
-```
 
+```
 
 
 # pH standardisation
@@ -1551,16 +1562,6 @@ do |>
 
 ```
 
-
-```{r}
-do |> 
-  plot_sensor(var_ref_id = c("c_do_sat_d100", "c_do_sat_d1000"),
-              sensor_calibrations = sensor_calibrations, 
-              sensor_reference = sensor_reference,
-              sensor_scaling = sensor_scaling, clip_ylim = FALSE, colour = "qc_code") 
-```
-
-
 # Assign QC codes to temperature data
 
 ```{r}
@@ -2225,6 +2226,7 @@ the quality control.
 #| label: write-data-to-zip-folder
 #| echo: false
 #| include: false
+#| eval: false
 
 # Create directory for rotoehu data
 path <- "rotoehu_data"
@@ -2305,6 +2307,7 @@ zip(zipfile = "rotoehu_data.zip", files = path)
 #| label: upload-data-github
 #| include: false
 #| echo: false
+#| eval: false
 
 piggyback::pb_upload(
   "rotoehu_data.zip",
