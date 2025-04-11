@@ -1,0 +1,102 @@
+---
+title: "Rotoehu QC Summary"
+execute:
+  warning: false
+format: 
+  html:
+    number-sections: true
+    number-depth: 2
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      number_sections: true
+tbl-cap-location: top
+---
+
+## Load libraries
+
+```{r}
+#| label: load-libraries
+#| include: true
+library(dplyr)
+library(tidyr)
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(ggpubr)
+library(readxl)
+library(scattermore)
+library(sf)
+library(tmap)
+
+# Set tmap mode and basemap
+tmap_mode("view")
+tmap_options(basemap.server = c("OpenStreetMap", "Esri.WorldImagery"))
+
+# Set timezone to NZST
+withr::local_locale(c("LC_TIME" = "C"))
+withr::local_timezone("Etc/GMT-12")
+
+# Load functions
+source("R/qc_funs.R")
+
+```
+
+## Get data from GitHub
+
+```{r}
+#| label: download-data
+#| cache: true
+piggyback::pb_download(
+  file = "rotoehu_data.zip",
+  dest = ".",
+  repo = "limnotrack/f_rotoehu",
+  tag = "v0.0.1"
+)
+
+# Unzip the file
+unzip("rotoehu_data.zip")
+
+```
+
+## Read data
+
+```{r}
+#| label: read-site-metadata
+
+path <- "rotoehu_data"
+
+site <- read_csv("rotoehu_data/sites.csv")
+site_events <- read_csv("rotoehu_data/site_events.csv")
+site_devices <- read_csv("rotoehu_data/site_devices.csv")
+device_var <- read_csv("rotoehu_data/device_variable.csv")
+device_position <- read_csv("rotoehu_data/device_position.csv")
+sensor_reference <- read_csv("rotoehu_data/sensor_reference.csv")
+sensor_calibrations <- read_csv("rotoehu_data/sensor_calibrations.csv")
+sensor_scaling <- read_csv("rotoehu_data/sensor_scaling.csv")
+variable_ref <- read_csv("rotoehu_data/variables.csv")
+qc_filters <- read_csv("rotoehu_data/qc_filters.csv")
+
+```
+
+```{r}
+#| label: read-qc-data
+
+data_wide <- read_csv("rotoehu_data/rotoehu_qc.csv")
+
+data <- data_wide |> 
+  pivot_longer(
+    cols = matches("^(qc_value|qc_code|qc_flag)_"),
+    names_to = c(".value", "var_ref_id"),
+    names_pattern = "^(qc_value|qc_code|qc_flag)_(.+)$"
+  )
+
+data <- data |> 
+  map_data_to_devices(site_devices = site_devices,
+                      device_var = device_var,
+                      device_position = device_position) 
+```
+
+  
+
