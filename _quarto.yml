@@ -6,7 +6,7 @@ website:
   navbar:
     left:
       - text: "Home"
-        href: docs/index.html
+        href: index.qmd
       - text: "QA/QC"
         href: rotoehu-qc.qmd
       - text: "Data"
