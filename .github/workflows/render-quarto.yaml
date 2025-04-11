@@ -6,6 +6,7 @@ on:
       - 'rotoehu-qc.qmd'
       - '.github/workflows/render-quarto.yaml'
       - 'rotoehu-qc-summary.qmd'
+      - '_quarto.yml'
 
 jobs:
   render:
