@@ -9,7 +9,7 @@ website:
         href: index.qmd
       - text: "QA/QC"
         href: rotoehu-qc.qmd
-      - text: "Data"
+      - text: "Data Summary"
         href: rotoehu-qc-summary.qmd
       - text: "Metadata"
         href: metadata.qmd
