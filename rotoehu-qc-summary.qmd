@@ -60,7 +60,7 @@ unzip("rotoehu_data.zip")
 
 ```
 
-## Read data
+# Read data
 
 ```{r}
 #| label: read-site-metadata
@@ -107,8 +107,197 @@ data <- data_wide |>
 data <- data |> 
   map_data_to_devices(site_devices = site_devices,
                       device_var = device_var,
-                      device_position = device_position) 
+                      device_position = device_position,
+                      variables = variable_ref
+                      ) 
+head(data)
+
 ```
 
+# Summarise by variable
+
+Which variables are in the dataset?
+
+Here is the list of variables in the dataset. The `var_ref_id` is the variable reference ID, which is used to identify the variable in the dataset. The `var_abbr` is the variable abbreviation, which is used to identify the variable in the metadata. The `label` is the variable label, which is used to identify the variable in the metadata. The `reference` is the reference value for the variable, it can be "d" (depth), "h" (height) or "e" elevation and the `value_m` is the value in meters.
+
+```{r}
+#| label: tbl-variables
+
+data |> 
+  select(var_ref_id) |> 
+  distinct() |> 
+  mutate(decode_var_ref(var_ref_id)) |>
+  left_join(variable_ref, by = c("var_abbr" = "abbr")) |> 
+  select(label, var_abbr, var_ref_id, reference, value_m) |> 
+  datatable(rownames = FALSE,
+            options = list(
+              pageLength = 6,
+              # dom = "t",
+              columnDefs = list(list(className = 'dt-center', targets = "_all"))
+            )
+  ) 
+
+
+```
+
+
+```{r}
+#| label: summary-by-variable
+
+data |> 
+  group_by(label) |> 
+  summarise(
+    min = min(qc_value, na.rm = TRUE),
+    max = max(qc_value, na.rm = TRUE),
+    median = median(qc_value, na.rm = TRUE),
+    mean = mean(qc_value, na.rm = TRUE),
+    sd = sd(qc_value, na.rm = TRUE),
+    n = n(),
+    na_pct = 100 * sum(is.na(qc_value)) / n(),
+    qc_pct = 100 * sum(qc_code %in% c("QC 300", "QC 400",
+                                      "QC 500", "QC 600")) / n(),
+  ) |> 
+  # Round everything to 1
+  mutate(across(where(is.numeric), ~ round(.x, 1))) |> 
+  DT::datatable()
+
+```
+
+
+# Quality control
+
+We used a set of quality control codes to assess the quality of the data. The
+codes are from the [National Environmental Monitoring Standards (NEMS)](https://www.nems.org.nz/). The codes are 
+as follows:
+
+```{r}
+#| label: qc-codes
+
+qc_codes <- c("Missing Record" = "QC 100",
+              "No Quality or Non Verified" = "QC 200",
+              "Synthetic" = "QC 300",
+              "Poor Quality" = "QC 400",
+              "Fair Quality" = "QC 500",
+              "Good Quality" = "QC 600")
+
+qc_code_col_scale = c(
+  "QC 100" = "#FF0000",
+  "QC 200" = "#8B5A00",
+  "QC 300" = "#D3D3D3",
+  "QC 400" = "#FFA500",
+  "QC 500" = "#00BFFF",
+  "QC 600" = "#006400"
+)
+
+qc_df <- data.frame(
+  qc_code = qc_codes,
+  qc_zone = names(qc_codes),
+  qc_code_col = unname(qc_code_col_scale),
+  stringsAsFactors = FALSE
+)
+
+qc_df |> 
+  datatable(rownames = FALSE,
+            options = list(
+              pageLength = 6,
+              dom = "t",
+              columnDefs = list(list(className = 'dt-center', targets = "_all"))
+            )
+  ) |> 
+  formatStyle(
+    'qc_code_col',
+    target = 'row',
+    backgroundColor = styleEqual(qc_code_col_scale, qc_code_col_scale)
+  )
   
+```
+
+# Visualise each variable
+
+## Temperature
+
+```{r}
+#| label: fig-temp-doy-qc
+#| fig.cap: "Temperature data at various depths quality control."
+#| warning: false
+#| message: false
+#| fig.width: 14
+#| fig.height: 10
+
+plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
+                                         "t_wtr_d1050", "t_wtr_d150",
+                                         "t_wtr_d300", "t_wtr_d50",
+                                         "t_wtr_d500", "t_wtr_d700", 
+                                         "t_wtr_d900"))
+
+```
+
+## Temperature
+
+```{r}
+#| label: fig-temp-doy-qc
+#| fig.cap: "Temperature data at various depths quality control."
+#| warning: false
+#| message: false
+#| fig.width: 14
+#| fig.height: 10
+
+plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
+                                         "t_wtr_d1050", "t_wtr_d150",
+                                         "t_wtr_d300", "t_wtr_d50",
+                                         "t_wtr_d500", "t_wtr_d700", 
+                                         "t_wtr_d900"))
+
+```
+
+## Oxygen saturation
+
+```{r}
+#| label: fig-oxygen-sat-doy-qc
+#| fig.cap: "Oxygen saturation data at 1 and 10m depths quality control."
+
+
+plot_var_ts_qc(data = data, var_ref_id = c("c_do_sat_d100", "c_do_sat_d1000"))
+
+```
+
+
+## Oxygen concentration
+
+```{r}
+#| label: fig-oxygen-doy-qc
+#| fig.cap: "Oxygen data at 1 and 10m depths quality control."
+
+plot_var_ts_qc(data = data, var_ref_id = c("c_do_d100", "c_do_d1000"))
+
+```
+## Chlorophyll
+
+```{r}
+#| label: fig-chla-doy-qc
+#| fig.cap: "Chlorophyll data at 1.0m quality control."
+
+plot_var_ts_qc(data = data, var_ref_id = c("f_chl_d100"))
+
+```
+
+## Phycocyanin
+
+```{r}
+#| label: fig-phyc-doy-qc
+#| fig.cap: "Phycocyanin data at 1.0m quality control."
+
+plot_var_ts_qc(data = data, var_ref_id = c("f_phyc_d100"))
+
+```
+
+## pH
+
+```{r}
+#| label: fig-ph-doy-qc
+#| fig.cap: "pH data at 1.0m quality control."
+
+plot_var_ts_qc(data = data, var_ref_id = c("c_ph_d100"))
+
+```
 
