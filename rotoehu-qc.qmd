@@ -83,8 +83,8 @@ sensor_map
 
 ```{r}
 #| label: load-data
-#| warning: false
 #| message: false
+#| warning: false
 #| cache: true
 
 dir.create("data-raw", showWarnings = FALSE)
@@ -195,6 +195,7 @@ ggplot() +
 ```{r}
 #| label: fig-plotly-data-do-misalignment
 #| fig.cap: DO and temperature data misalignment at 0.5m.
+#| eval: false
 
 plotly_data(dat2, y1 = "do_cont_0.5m", y2 = "do_temp_0.5m", sub = 20)
 ```
@@ -202,10 +203,9 @@ plotly_data(dat2, y1 = "do_cont_0.5m", y2 = "do_temp_0.5m", sub = 20)
 Replace DO data with NA's wh
 
 ```{r}
-#| label: fig-reassign-variables-do-cont0p5m-1
+#| label: reassign-variables-do-cont0p5m-1
 #| warning: false
 #| message: false
-#| fig.cap: Reassigned DO data to correct periods.
 
 date_start <- "2015-11-27 07:45:00"
 date_end <- "2016-03-01 10:45:00"
@@ -215,7 +215,17 @@ var2 <- "do_temp_0.5m"
 dat3 <- dat2 |> 
   reassign(var1, date_range = c(date_start, date_end)) |> 
   reassign(var1, date_range = date_range2)
-summary(dat3$do_cont_0.5m)
+# summary(dat3$do_cont_0.5m)
+
+
+```
+
+```{r}
+#| label: fig-reassign-variables-do-cont0p5m-1
+#| warning: false
+#| message: false
+#| fig.cap: Reassigned DO data to correct periods.
+#| eval: false
 
 plotly_data(dat3, y1 = "do_cont_0.5m", y2 = "do_temp_0.5m", date_range = date_range2, buffer = 200)
 
@@ -224,7 +234,7 @@ plotly_data(dat3, y1 = "do_cont_0.5m", y2 = "do_temp_0.5m", date_range = date_ra
 Swap DO & temperature back into their correct columns.
 
 ```{r}
-#| label: fig-reassign-variables-do-cont0p5m-2
+#| label: reassign-variables-do-cont0p5m-2
 #| warning: false
 #| message: false
 #| fig.cap: Reassigned DO data to correct periods second period.
@@ -232,18 +242,30 @@ Swap DO & temperature back into their correct columns.
 swap_start <- "2016-05-10 13:30:00"
 swap_end <- "2017-06-08 16:30:00"
 
-dat3 <- swap_cols(dat3, var1 = "do_cont_0.5m", var2 = "do_temp_0.5m", date_range = c(swap_start, swap_end))
+dat3 <- swap_cols(dat3, var1 = "do_cont_0.5m", var2 = "do_temp_0.5m", 
+                  date_range = c(swap_start, swap_end))
+
+```
+
+```{r}
+#| label: fig-reassign-variables-do-cont0p5m-2
+#| warning: false
+#| message: false
+#| fig.cap: Reassigned DO data to correct periods second period.
+#| eval: false
 
 plotly_data(dat3, y1 = "do_cont_0.5m", y2 = "do_temp_0.5m",
             date_range = c(swap_start, swap_end), buffer = 240, sub = 50)
 
 ```
 
+
 ```{r}
 #| label: fig-reassign-variables-do-cont0p5m-3
 #| warning: false
 #| message: false
 #| fig.cap: Reassigned DO data total time series at 0.5m.
+#| eval: false
 
 plotly_data(dat3, y1 = "do_cont_0.5m", y2 = "do_temp_0.5m", sub = 50)
 ```
@@ -256,12 +278,13 @@ Dissolved oxygen is misaligned at 10m in December 2019 to January 2020.
 ```{r}
 #| label: fig-plotly-data-do-misalignment-10m
 #| fig.cap: DO and temperature data misalignment at 10m.
+#| eval: false
 
 plotly_data(dat3, y1 = "do_cont_10m", y2 = "do_temp_10m", sub = 50)
 ```
 
 ```{r}
-#| label: fig-reassign-variables-do-cont10m-1
+#| label: reassign-variables-do-cont10m-1
 #| warning: false
 #| message: false
 #| fig.cap: Reassigned DO data to correct periods at 10m.
@@ -271,12 +294,23 @@ swap_end <- "2020-02-04 11:45:00"
 
 dat3 <- swap_cols(dat3, var1 = "do_cont_10m", var2 = "do_temp_10m", date_range = c(swap_start, swap_end))
 
+
+```
+
+```{r}
+#| label: fig-reassign-variables-do-cont10m-1
+#| warning: false
+#| message: false
+#| fig.cap: Reassigned DO data to correct periods at 10m.
+#| eval: false
+
 plotly_data(dat3, y1 = "do_cont_10m", y2 = "do_temp_10m", date_range = c(swap_start, swap_end), buffer = 240, sub = 1)
 
 ```
 
 ```{r}
 #| label: fig-reassign-variables-do-cont10m-2
+#| eval: false
 
 plotly_data(dat3, y1 = "do_cont_10m", y2 = "do_temp_10m", sub = 50)
 ```
@@ -370,13 +404,13 @@ raw_long_device <- sensor_map |>
   ungroup() |> 
   arrange(device_id, datetime) |>
   mutate(qc_value = round(raw_value, 2),
-         flag = "", 
+         qc_flag = "", 
          qc_code = case_when(
            is.na(raw_value) ~ "QC 100",
            TRUE ~ "QC 200"
          )) |> 
   select(site, datetime, device_id, var_abbr, var_ref_id, raw_value, qc_value, 
-         flag, qc_code)
+         qc_flag, qc_code)
 
 head(raw_long_device)
 
@@ -525,11 +559,11 @@ raw_long_device |>
   filter(var_ref_id == "h_rh_h150") |> 
   summary()
 
-plotly_data(raw_long_device, y1 = "h_rh_h150", sub = 20)
-# plot_sensor(data = raw_long_device, var_ref_id = "h_rh_h150",
-#             sensor_calibrations = sensor_calibrations, 
-#             sensor_reference = sensor_reference,
-#             sensor_scaling = sensor_scaling) 
+# plotly_data(raw_long_device, y1 = "h_rh_h150", sub = 20)
+plot_sensor(data = raw_long_device, var_ref_id = "h_rh_h150",
+            sensor_calibrations = sensor_calibrations,
+            sensor_reference = sensor_reference,
+            sensor_scaling = sensor_scaling)
 
 
 ```
@@ -709,7 +743,7 @@ raw_long_device2 <- raw_long_device |>
 # mutate(raw_value = coalesce(raw_value.x, raw_value.y)) |> 
 # select(-c(raw_value.x, raw_value.y))
 
-plotly_data(raw_long_device2, y1 = "c_ph_d100", sub = 20)
+# plotly_data(raw_long_device2, y1 = "c_ph_d100", sub = 20)
 
 
 ```
@@ -823,18 +857,18 @@ raw_v <- raw_chl |>
                    FUN = \(x) ifelse(x <= 0, NA, x)) |>
   apply_adjustment("f_chl_d100_raw_V", 
                    date_range = c("2020-11-26 03:17:12", "2022-07-15 20:27:09"),
-                   FUN = \(x) NA, flag = "bad_data") |>
+                   FUN = \(x) NA, qc_flag = "bad_data") |>
   apply_adjustment("f_chl_d100_raw_V", 
                    date_range = c("2014-05-09 15:07:28", "2022-07-15 20:27:09"), 
-                   FUN = \(x) x / 10, flag = "further_adj"
+                   FUN = \(x) x / 10, qc_flag = "further_adj"
   ) |> 
   apply_adjustment("f_chl_d100_raw_V", 
                    date_range = c("2019-07-25 14:25:22", "2019-08-05 09:04:22"), 
-                   FUN = \(x) x / 10, flag = "further_adj"
+                   FUN = \(x) x / 10, qc_flag = "further_adj"
   ) |> 
   apply_adjustment("f_chl_d100_raw_V", 
                    date_range = c("2013-06-27 22:03:49", "2013-07-08 05:04:59"), 
-                   FUN = \(x) x * 10, flag = "further_adj"
+                   FUN = \(x) x * 10, qc_flag = "further_adj"
   ) |> 
   update_qc_code(var_ref_id = "f_chl_d100_raw_V", date_range = c("2018-01-03 08:47:32", "2018-04-24 20:03:15"),
                  value_range = c(-0.22, 5.04), filter_type = "both", qc_code = "QC 200") |>
@@ -1047,7 +1081,7 @@ data = do_1m
 do_1m <- do_1m |> 
   # remove values < 40
   apply_adjustment("c_do_sat_d100", FUN = \(x) ifelse(x < 40, NA, x), 
-                   flag = "bad_data") |>
+                   qc_flag = "bad_data") |>
   adjust_linear_drift(var_ref_id = "c_do_sat_d100", sensor_refs) |>
   drift_correction(var_ref_id = "c_do_sat_d100", 
                    date_range = c("2011-05-11 12:49:09", "2011-08-14 02:06:44"),
@@ -1169,7 +1203,7 @@ do_10m <- do_10m |>
                  date_range = c("2017-06-25 08:18:18", "2019-01-19 22:05:08"),
                  filter_type = "date", qc_code = "QC 600") |> 
   apply_adjustment("c_do_sat_d1000", FUN = \(x) ifelse(x < 0, NA, x), 
-                   flag = "bad_data") |> 
+                   qc_flag = "bad_data") |> 
   update_qc_code(var_ref_id = "c_do_sat_d1000",
                  date_range = c("2011-02-04 20:25:02", "2022-03-24 22:52:05"),
                  value_range = c(109.23, 210),
@@ -1428,7 +1462,7 @@ do_conc2_1m <- left_join(do_1m, temp_1m, by = "datetime") |>
          var_ref_id = "c_do2_d100",
          qc_value = qc_value / 100 * do_sat_mgL
   ) |> 
-  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, flag)
+  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, qc_flag)
 
 do_conc_1m <- raw_long_device_filt |> 
   filter(var_ref_id == "c_do_d100") |> 
@@ -1440,7 +1474,7 @@ do_conc_1m <- raw_long_device_filt |>
 do_conc2_1m <- do_conc2_1m |> 
   mutate(var_ref_id = "c_do_d100") |> 
   select(datetime, var_ref_id, site, device_id, var_abbr, qc_value,
-         flag)
+         qc_flag)
 
 do_conc3_1m <- left_join(do_conc_1m, do_conc2_1m, by = c("datetime", "var_ref_id", "site", "device_id", "var_abbr")) |> 
   mutate(
@@ -1478,7 +1512,7 @@ do_conc2_10m <- left_join(do_10m, temp_10m, by = "datetime") |>
          qc_code = "QC 300"
   ) |> 
   select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, qc_code,
-         flag)
+         qc_flag)
 
 do_conc_10m <- raw_long_device_filt |> 
   filter(var_ref_id == "c_do_d1000") |> 
@@ -1489,7 +1523,7 @@ do_conc_10m <- raw_long_device_filt |>
 
 do_conc2_10m <- do_conc2_10m |> 
   mutate(var_ref_id = "c_do_d1000") |> 
-  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, flag)
+  select(datetime, var_ref_id, site, device_id, var_abbr, qc_value, qc_flag)
 
 do_conc3_10m <- left_join(do_conc_10m, do_conc2_10m, by = c("datetime", "var_ref_id", "site", "device_id", "var_abbr")) |> 
   mutate(
@@ -2203,38 +2237,50 @@ data_qc_wide <- data |>
   select(-raw_value, -device_id, -var_abbr) |> 
   pivot_wider(
     names_from = var_ref_id,
-    values_from = c(qc_value, qc_code, flag),
+    values_from = c(qc_value, qc_code, qc_flag),
     names_sep = "_"
   ) 
-col_names <- names(data_qc_wide)
-
-names(data_qc_wide) <- gsub("qc_value_", "", names(data_qc_wide))
 
 
-# Function to extract numeric depth
-extract_depth <- function(x) {
-  as.numeric(sub(".*_d([0-9]+)$", "\\1", x))
-}
+# Reconvert back to long
+data_qc_long <- data_qc_wide |> 
+  pivot_longer(
+    cols = matches("^(qc_value|qc_code|qc_flag)_"),
+    names_to = c(".value", "var_ref_id"),
+    names_pattern = "^(qc_value|qc_code|qc_flag)_(.+)$"
+  )
 
-# Helper to sort t_wtr columns within a prefix group
-sort_within_group <- function(vec, prefix) {
-  group_idxs <- grep(paste0("^", prefix, "t_wtr_d"), vec)
-  group_vals <- vec[group_idxs]
-  sorted_vals <- group_vals[order(extract_depth(group_vals))]
-  vec[group_idxs] <- sorted_vals
-  vec
-}
 
-# Apply sorting for each group
-new_ord <- col_names
-new_ord <- sort_within_group(new_ord, "qc_value_")
-new_ord <- sort_within_group(new_ord, "qc_code_")
-new_ord <- sort_within_group(new_ord, "flag_")
-new_ord <- gsub("qc_value_", "", new_ord)
 
-# Done!
-new_ord
-data_qc_wide <- data_qc_wide[, new_ord]
+# col_names <- names(data_qc_wide)
+# 
+# names(data_qc_wide) <- gsub("qc_value_", "", names(data_qc_wide))
+# 
+# 
+# # Function to extract numeric depth
+# extract_depth <- function(x) {
+#   as.numeric(sub(".*_d([0-9]+)$", "\\1", x))
+# }
+# 
+# # Helper to sort t_wtr columns within a prefix group
+# sort_within_group <- function(vec, prefix) {
+#   group_idxs <- grep(paste0("^", prefix, "t_wtr_d"), vec)
+#   group_vals <- vec[group_idxs]
+#   sorted_vals <- group_vals[order(extract_depth(group_vals))]
+#   vec[group_idxs] <- sorted_vals
+#   vec
+# }
+# 
+# # Apply sorting for each group
+# new_ord <- col_names
+# new_ord <- sort_within_group(new_ord, "qc_value_")
+# new_ord <- sort_within_group(new_ord, "qc_code_")
+# new_ord <- sort_within_group(new_ord, "flag_")
+# new_ord <- gsub("qc_value_", "", new_ord)
+# 
+# # Done!
+# new_ord
+# data_qc_wide <- data_qc_wide[, new_ord]
 
 write_csv(site, file = file.path(path, "sites.csv"), na = "")
 write_csv(data_qc_wide, file = file.path(path, "rotoehu_qc.csv"), na = "")
