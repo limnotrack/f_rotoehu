@@ -2578,4 +2578,11 @@ plot_site_events <- function(data) {
   
 }
 
-
+map_site_devices <- function(site_devices, device_var, device_position) {
+  site_devices |> 
+    dplyr::select(site, device_id, date_from, date_to) |> 
+    dplyr::left_join(device_var, by = "device_id") |> 
+    dplyr::left_join(device_position, by = "device_id") |>
+    dplyr::mutate(var_ref_id = generate_var_ref(var_abbr, z_relative, 
+                                                reference)) 
+}
