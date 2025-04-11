@@ -17,6 +17,7 @@ Imports:
   circular,
   dataspice,
   dplyr,
+  DT,
   dtplyr,
   ggplot2,
   ggpubr,
