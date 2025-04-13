@@ -106,6 +106,16 @@ dat <- read_csv("data-raw/rotoehu_sftp_compiled_raw.csv") |>
 
 ```
 
+```{r}
+#| label: delete-raw-data
+#| include: false
+#| echo: false
+
+# Delete raw data
+unlink("data-raw/rotoehu_sftp_compiled_raw.csv", force = TRUE)
+```
+
+
 # Site location
 
 Lake Rotoehu is located in the Bay of Plenty region of New Zealand. The 
@@ -318,8 +328,7 @@ plotly_data(dat3, y1 = "do_cont_10m", y2 = "do_temp_10m", sub = 50)
 
 Sensors were all 0.5-1m, we will call them 1m.
 
-Map column names to standard names used in the database. Write level one raw 
-data to file.
+Map column names to standard names used in the database. 
 
 ```{r}
 #| label: column-mapping-standard-names
@@ -355,9 +364,19 @@ col_mapping <- c(
 
 dat4 <- standardise_columns(dat3, col_mapping)
 
-write_csv(dat4, "data-raw/rotoehu_sftp_compiled_raw_level1.csv")
 
 ```
+
+Write level one raw data to file.
+
+```{r}
+#| label: write-level1-raw-data
+#| eval: false
+
+write_csv(dat4, "data-raw/rotoehu_sftp_compiled_raw_level1.csv")
+```
+
+
 
 
 # Sensor Attribution
@@ -368,16 +387,20 @@ Map each sensor onto each data point.
 #| label: load-raw-level0p5
 #| include: false
 #| echo: false
+#| eval: false
 
 raw <- read_csv("data-raw/rotoehu_sftp_compiled_raw_level1.csv")
 
-tst <- raw |> 
-  mutate(diff = c(NA, diff(datetime)))
-tst |> 
-  filter(diff != 15)
-
 ```
 
+```{r}
+#| label: assign-raw-data
+#| include: false
+#| echo: false
+
+raw <- dat4
+
+```
 
 ```{r}
 #| label: check-sensor-mapping
