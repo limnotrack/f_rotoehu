@@ -141,7 +141,6 @@ data |>
 
 ```
 
-
 ```{r}
 #| label: summary-by-variable
 
@@ -164,15 +163,13 @@ data |>
 
 ```
 
-
 # Quality control
 
-We used a set of quality control codes to assess the quality of the data. The
-codes are from the [National Environmental Monitoring Standards (NEMS)](https://www.nems.org.nz/). The codes are 
-as follows:
+We used a set of quality control codes to assess the quality of the data. The codes are from the [National Environmental Monitoring Standards (NEMS)](https://www.nems.org.nz/). The codes are as follows:
 
 ```{r}
-#| label: qc-codes
+#| label: tbl-qc-codes
+#| tbl-cap: "Quality control codes used in the dataset."
 
 qc_codes <- c("Missing Record" = "QC 100",
               "No Quality or Non Verified" = "QC 200",
@@ -215,6 +212,9 @@ qc_df |>
 
 # Visualise each variable
 
+The plots below show the A) time series of the data, B) the quality codes (QC)
+attributed to each data point, C) the device used to measure the data.
+
 ## Temperature
 
 ```{r}
@@ -233,7 +233,6 @@ plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
 
 ```
 
-
 ## Oxygen saturation
 
 ```{r}
@@ -245,7 +244,6 @@ plot_var_ts_qc(data = data, var_ref_id = c("c_do_sat_d100", "c_do_sat_d1000"))
 
 ```
 
-
 ## Oxygen concentration
 
 ```{r}
@@ -255,6 +253,7 @@ plot_var_ts_qc(data = data, var_ref_id = c("c_do_sat_d100", "c_do_sat_d1000"))
 plot_var_ts_qc(data = data, var_ref_id = c("c_do_d100", "c_do_d1000"))
 
 ```
+
 ## Chlorophyll
 
 ```{r}
@@ -284,4 +283,3 @@ plot_var_ts_qc(data = data, var_ref_id = c("f_phyc_d100"))
 plot_var_ts_qc(data = data, var_ref_id = c("c_ph_d100"))
 
 ```
-
