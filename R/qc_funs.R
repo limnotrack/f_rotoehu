@@ -519,10 +519,10 @@ plot_var_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
     ggplot2::theme_classic() +
     ggplot2::labs(x = "", y = "QC Value", colour = "Variable") +
     ggplot2::theme(axis.line = ggplot2::element_blank(),
-          # Add guide lines
-          panel.grid.major = ggplot2::element_line(colour = "grey", 
-                                                   linewidth = 0.1)
-          )
+                   # Add guide lines
+                   panel.grid.major = ggplot2::element_line(colour = "grey", 
+                                                            linewidth = 0.1)
+    )
   
   g <- ggpubr::ggarrange(p1, p2, p3, ncol = 1,
                          heights = c(0.6, 0.2, 0.2), 
@@ -2571,7 +2571,7 @@ plot_site_events <- function(data) {
   ggplot2::ggplot(data = data) +
     ggplot2::geom_vline(ggplot2::aes(xintercept = date), alpha = 0.2) +
     ggplot2::geom_text(ggplot2::aes(x = date, y = index, label = comments), 
-                      size = 3, hjust = 0) +
+                       size = 3, hjust = 0) +
     ggplot2::theme_bw()+
     ggplot2::labs(x = "Date", y = "Comments") +
     # remove y axis labels
