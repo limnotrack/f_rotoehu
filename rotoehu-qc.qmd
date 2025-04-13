@@ -2191,10 +2191,11 @@ Plot each variable
 ## Temperature
 
 ```{r}
-#| label: fig-temp-doy-qc
+#| label: fig-temp-qc
 #| fig.cap: "Temperature data at various depths quality control."
 #| warning: false
 #| message: false
+#| eval: false
 #| fig.height: 10
 
 plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
