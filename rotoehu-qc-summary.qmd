@@ -170,6 +170,7 @@ We used a set of quality control codes to assess the quality of the data. The co
 ```{r}
 #| label: tbl-qc-codes
 #| tbl-cap: "Quality control codes used in the dataset."
+#| echo: false
 
 qc_codes <- c("Missing Record" = "QC 100",
               "No Quality or Non Verified" = "QC 200",
@@ -283,3 +284,5 @@ plot_var_ts_qc(data = data, var_ref_id = c("f_phyc_d100"))
 plot_var_ts_qc(data = data, var_ref_id = c("c_ph_d100"))
 
 ```
+
+<a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip" download class="btn btn-primary">Download Data</a>
