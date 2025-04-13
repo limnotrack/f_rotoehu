@@ -475,25 +475,26 @@ plot_var_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
     dplyr::filter(var_ref_id %in% sel_vars) |>
     dplyr::mutate(var_ref_id = factor(var_ref_id, 
                                       levels = device_pos$var_ref_id)) |>
-    ggplot(aes(x = datetime, y = var_ref_id, fill = qc_code)) +
-    geom_raster() +
-    labs(x = "", y = "", fill = "QC Code") +
-    scale_fill_manual(values = qc_code_col_scale) +
+    ggplot2::ggplot(ggplot2::aes(x = datetime, y = var_ref_id, fill = qc_code)) +
+    ggplot2::geom_raster() +
+    ggplot2::labs(x = "", y = "", fill = "QC Code") +
+    ggplot2::scale_fill_manual(values = qc_code_col_scale) +
     # Remove x and y axis 
-    theme_classic() +
-    theme(axis.line = element_blank()) 
+    ggplot2::theme_classic() +
+    ggplot2::theme(axis.line = ggplot2::element_blank()) 
   
   p3 <- data |> 
     dplyr::filter(var_ref_id %in% sel_vars) |>
     dplyr::mutate(var_ref_id = factor(var_ref_id, 
                                       levels = device_pos$var_ref_id)) |>
-    ggplot(aes(x = datetime, y = var_ref_id, fill = device_id)) +
-    geom_raster() +
-    labs(x = "", y = "", fill = "Device") +
-    scale_fill_brewer(palette = "Paired") +
+    ggplot2::ggplot(ggplot2::aes(x = datetime, y = var_ref_id,
+                                 fill = device_id)) +
+    ggplot2::geom_raster() +
+    ggplot2::labs(x = "", y = "", fill = "Device") +
+    ggplot2::scale_fill_brewer(palette = "Paired") +
     # Remove x and y axis 
-    theme_classic() +
-    theme(axis.line = element_blank())
+    ggplot2::theme_classic() +
+    ggplot2::theme(axis.line = ggplot2::element_blank())
   
   
   df <- data |> 
@@ -515,11 +516,12 @@ plot_var_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
     scattermore::geom_scattermore(aes(datetime, qc_value, colour = var_ref_id), 
                                   pointsize = 0.8) +
     ggplot2::scale_colour_viridis_d(direction = -1, end = 0.8) +
-    theme_classic() +
-    labs(x = "", y = "QC Value", colour = "Variable") +
-    theme(axis.line = element_blank(),
+    ggplot2::theme_classic() +
+    ggplot2::labs(x = "", y = "QC Value", colour = "Variable") +
+    ggplot2::theme(axis.line = ggplot2::element_blank(),
           # Add guide lines
-          panel.grid.major = element_line(colour = "grey", linewidth = 0.1)
+          panel.grid.major = ggplot2::element_line(colour = "grey", 
+                                                   linewidth = 0.1)
           )
   
   g <- ggpubr::ggarrange(p1, p2, p3, ncol = 1,
