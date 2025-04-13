@@ -3,6 +3,7 @@ project:
 
 website:
   title: "Lake Rotoehu Data Product"
+  favicon: assets/favicon.ico
   navbar:
     left:
       - text: "Home"
