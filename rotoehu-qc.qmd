@@ -2199,15 +2199,15 @@ Plot each variable
 #| fig.height: 10
 #| fig.show: "hold"
 
-p1 <- plot_var_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
+# p1 <- plot_var_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
 
 p2 <- plot_qc_code_ts(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
 
-p3 <- plot_device_ts(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
+# p3 <- plot_device_ts(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
 
-print(p1)
+# print(p1)
 print(p2)
-print(p3)
+# print(p3)
 
 ```
 
