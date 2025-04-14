@@ -9,12 +9,9 @@ format: html
 #| label: load-libraries
 #| include: true
 #| warning: false
+
 library(dplyr)
-library(tidyr)
 library(readr)
-library(lubridate)
-library(sf)
-library(tmap)
 library(DT)
 
 # Set tmap mode and basemap
@@ -25,9 +22,6 @@ tmap_options(basemap.server = c("OpenStreetMap", "Esri.WorldImagery"))
 withr::local_locale(c("LC_TIME" = "C"))
 withr::local_timezone("Etc/GMT-12")
 
-# Load functions
-# source("R/qc_funs.R")
-
 ```
 
 ## Get data from GitHub
@@ -35,6 +29,7 @@ withr::local_timezone("Etc/GMT-12")
 ```{r}
 #| label: download-data
 #| cache: true
+#| warning: false
 piggyback::pb_download(
   file = "rotoehu_data.zip",
   dest = ".",
@@ -62,7 +57,7 @@ data.frame(
   mutate(
     Description = case_when(
       File == "device_position.csv" ~ "Device position",
-      File == "device_variable.csv" ~ "Device variable relationship",
+      File == "device_variable.csv" ~ "Mapping of variables onto devices",
       File == "qc_filters.csv" ~ "Quality control filters",
       File == "sensor_calibrations.csv" ~ "Sensor calibrations",
       File == "rotoehu_qc.csv" ~ "Quality controlled data",
