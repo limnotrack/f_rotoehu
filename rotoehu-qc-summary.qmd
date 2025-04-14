@@ -14,7 +14,7 @@ format:
 tbl-cap-location: top
 ---
 
-## Load libraries
+## Load libraries {.unnumbered}
 
 ```{r}
 #| label: load-libraries
@@ -24,17 +24,9 @@ library(tidyr)
 library(readr)
 library(lubridate)
 library(ggplot2)
-library(ggpubr)
-library(readxl)
 library(scattermore)
-library(sf)
-library(tmap)
 library(DT)
 library(patchwork)
-
-# Set tmap mode and basemap
-tmap_mode("view")
-tmap_options(basemap.server = c("OpenStreetMap", "Esri.WorldImagery"))
 
 # Set timezone to NZST
 withr::local_locale(c("LC_TIME" = "C"))
@@ -45,7 +37,7 @@ source("R/qc_funs.R")
 
 ```
 
-## Get data from GitHub
+# Download data from GitHub
 
 ```{r}
 #| label: download-data
@@ -310,5 +302,12 @@ plot_var_ts_qc(data = data, var_ref_id = c("f_phyc_d100"))
 plot_var_ts_qc(data = data, var_ref_id = c("c_ph_d100"))
 
 ```
+
+# Download data
+
+The data used in this analysis is available for download. The data is in CSV 
+format and is zipped. The data is in the `rotoehu_data.zip` folder. The data can
+be downloaded either from [GitHub](https://github.com/limnotrack/f_rotoehu/releases/tag/v0.0.1)
+or from the button below.
 
 <a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip" download class="btn btn-primary">Download Data</a>
