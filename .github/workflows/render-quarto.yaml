@@ -42,6 +42,7 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache: always
+          cache-version: 0
 
       - name: Render and publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
