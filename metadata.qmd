@@ -1,9 +1,23 @@
 ---
 title: "Metadata"
-format: html
+execute:
+  warning: false
+format: 
+  html:
+    number-sections: true
+    number-depth: 2
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+      number_sections: true
 ---
 
-## Load libraries
+The metadata for the Rotoehu project is within the `rotoehu_data.zip` folder. This folder contains the metadata for the project, including the device position, device variable, quality control filters, sensor calibrations, sensor reference, sensor scaling, site devices, site events, sites and variables.
+
+In this document, we will describe the contents of each file in the `rotoehu_data.zip` folder. The files are in CSV format.
+
+## Load libraries {.unnumbered}
 
 ```{r}
 #| label: load-libraries
@@ -20,7 +34,7 @@ withr::local_timezone("Etc/GMT-12")
 
 ```
 
-## Get data from GitHub
+# Download data from GitHub
 
 ```{r}
 #| label: download-data
@@ -39,7 +53,7 @@ list.files("rotoehu_data", recursive = TRUE)
 
 ```
 
-## Files
+# Files
 
 ```{r}
 #| label: files
@@ -103,7 +117,11 @@ device_position |>
 
 ## Device variable
 
-The device variable is stored in a CSV file. The file contains the following columns: - `device_id`: The unique identifier for the device. - `var_abbr`: The variable abbreviation. This is the short name for the variable.
+The device variable is stored in a CSV file. The file contains the following columns:
+
+-   `device_id`: The unique identifier for the device.
+
+-   `var_abbr`: The variable abbreviation. This is the short name for the variable.
 
 ```{r}
 #| label: device-variable
