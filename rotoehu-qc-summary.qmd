@@ -93,7 +93,7 @@ data_wide <- read_csv("rotoehu_data/rotoehu_qc.csv", col_types = cols())
 
 ```
 
-Pivot the data to long format and map site devices
+Pivot the data to long format and map site devices.
 
 ```{r}
 #| label: pivot-to-long-map-devices
