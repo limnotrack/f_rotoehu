@@ -2198,11 +2198,12 @@ Plot each variable
 #| eval: false
 #| fig.height: 10
 
-plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
+p <- plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
                                          "t_wtr_d1050", "t_wtr_d150",
                                          "t_wtr_d300", "t_wtr_d50",
                                          "t_wtr_d500", "t_wtr_d700", 
                                          "t_wtr_d900"))
+print(p)
 
 ```
 
