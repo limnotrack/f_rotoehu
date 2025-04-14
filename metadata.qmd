@@ -3,4 +3,159 @@ title: "Metadata"
 format: html
 ---
 
-Coming soon...
+## Load libraries
+
+```{r}
+#| label: load-libraries
+#| include: true
+#| warning: false
+library(dplyr)
+library(tidyr)
+library(readr)
+library(lubridate)
+library(sf)
+library(tmap)
+library(DT)
+
+# Set tmap mode and basemap
+tmap_mode("view")
+tmap_options(basemap.server = c("OpenStreetMap", "Esri.WorldImagery"))
+
+# Set timezone to NZST
+withr::local_locale(c("LC_TIME" = "C"))
+withr::local_timezone("Etc/GMT-12")
+
+# Load functions
+# source("R/qc_funs.R")
+
+```
+
+## Get data from GitHub
+
+```{r}
+#| label: download-data
+#| cache: true
+piggyback::pb_download(
+  file = "rotoehu_data.zip",
+  dest = ".",
+  repo = "limnotrack/f_rotoehu",
+  tag = "v0.0.1"
+)
+
+# Unzip the file
+unzip("rotoehu_data.zip")
+list.files("rotoehu_data", recursive = TRUE)
+
+```
+
+## Files
+
+```{r}
+#| label: files
+#| echo: false
+
+files <- list.files("rotoehu_data", recursive = TRUE)
+data.frame(
+  File = files,
+  Description = NA
+) |> 
+  mutate(
+    Description = case_when(
+      File == "device_position.csv" ~ "Device position",
+      File == "device_variable.csv" ~ "Device variable relationship",
+      File == "qc_filters.csv" ~ "Quality control filters",
+      File == "sensor_calibrations.csv" ~ "Sensor calibrations",
+      File == "rotoehu_qc.csv" ~ "Quality controlled data",
+      File == "sensor_reference.csv" ~ "Sensor reference measurements",
+      File == "sensor_scaling.csv" ~ "Sensor scaling relationships",
+      File == "site_devices.csv" ~ "Mapping of devices to sites",
+      File == "site_events.csv" ~ "Site events",
+      File == "sites.csv" ~ "Site metadata",
+      File == "variables.csv" ~ "Variable description"
+    )
+  ) |> 
+  datatable(
+    options = list(
+      pageLength = 15,
+      dom = "t"
+    )
+  ) 
+
+```
+
+
+
+## Device position
+
+The device position is stored in a CSV file. The file contains the following columns:
+- `device_id`: The unique identifier for the device.
+- `reference`: The location of the device. This can be depth ("d"), height ("h")
+or elevation ("e").
+- `z_relative`: The relative position of the device in meters. This is the distance
+from the reference point to the device.
+
+```{r}
+#| label: device-position
+
+device_position <- read_csv("rotoehu_data/device_position.csv", col_types = cols())
+
+device_position |> 
+  datatable(
+    options = list(
+      pageLength = 5,
+      lengthMenu = c(5, 10, 20),
+      scrollX = TRUE,
+      dom = "t"
+    )
+  ) 
+
+```
+
+## Device variable
+
+The device variable is stored in a CSV file. The file contains the following columns:
+- `device_id`: The unique identifier for the device.
+- `var_abbr`: The variable abbreviation. This is the short name for the variable.
+
+```{r}
+#| label: device-variable
+
+device_variable <- read_csv("rotoehu_data/device_variable.csv", col_types = cols())
+device_variable |> 
+  datatable(
+    options = list(
+      pageLength = 5,
+      lengthMenu = c(5, 10, 20),
+      scrollX = TRUE,
+      dom = "t"
+    )
+  ) 
+```
+
+## Quality control filters
+
+The quality control filters are stored in a CSV file. The file contains the following columns:
+- `var_abbr`: The variable abbreviation. This is the short name for the variable.
+- `low`: The lower limit for the variable. This is the minimum value for the variable.
+- `high`: The upper limit for the variable. This is the maximum value for the variable.
+- `roc`: The rate of change for the variable. This is the maximum rate of change for the variable.
+- `consec`: The consecutive number of points for the variable. This is the minimum number of consecutive points for the variable.
+- `interp`: The interpolation for the variable. This is the maximum number of points for the variable.
+
+```{r}
+#| label: qc-filters
+
+qc_filters <- read_csv("rotoehu_data/qc_filters.csv", col_types = cols())
+
+qc_filters |> 
+  datatable(
+    options = list(
+      pageLength = 5,
+      lengthMenu = c(5, 10, 20),
+      scrollX = TRUE,
+      dom = "t"
+    )
+  )
+
+```
+
