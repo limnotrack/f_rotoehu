@@ -517,6 +517,87 @@ plot_var_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
   return(g)
 }
 
+plot_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
+  sel_vars <- var_ref_id
+  
+  device_pos <- decode_var_ref(sel_vars) |> 
+    dplyr::mutate(var_ref_id = sel_vars) |> 
+    dplyr::arrange(dplyr::desc(value_m))
+  
+
+  
+  # Timeseries Plot
+  df <- data |> 
+    dplyr::filter(var_ref_id %in% sel_vars) |>
+    dplyr::left_join(device_pos, by = c("var_ref_id")) |> 
+    dplyr::mutate(var_ref_id = factor(var_ref_id, levels = rev(device_pos$var_ref_id))) 
+  
+  p1 <- ggplot2::ggplot(df) +
+    scattermore::geom_scattermore(aes(datetime, qc_value, colour = var_ref_id), pointsize = 0.8) +
+    ggplot2::scale_colour_viridis_d(direction = -1, end = 0.8) +
+    ggplot2::theme_classic() +
+    ggplot2::labs(x = "", y = "QC Value", colour = "Variable") +
+    ggplot2::theme(
+      axis.line = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_line(colour = "grey", linewidth = 0.1)
+    )
+  
+  return(p1)
+
+}
+
+
+plot_qc_code <- function(data, var_ref_id, FUN = median, days_offset = 184) {
+  sel_vars <- var_ref_id
+  
+  device_pos <- decode_var_ref(sel_vars) |> 
+    dplyr::mutate(var_ref_id = sel_vars) |> 
+    dplyr::arrange(dplyr::desc(value_m))
+  
+  qc_code_col_scale = c(
+    "QC 100" = "#FF0000",
+    "QC 200" = "#8B5A00",
+    "QC 300" = "#D3D3D3",
+    "QC 400" = "#FFA500",
+    "QC 500" = "#00BFFF",
+    "QC 600" = "#006400"
+  )
+  
+  # QC Plot
+  p2 <- data |> 
+    dplyr::filter(var_ref_id %in% sel_vars) |>
+    dplyr::mutate(var_ref_id = factor(var_ref_id, levels = device_pos$var_ref_id)) |>
+    ggplot2::ggplot(ggplot2::aes(x = datetime, y = var_ref_id, fill = qc_code)) +
+    ggplot2::geom_raster() +
+    ggplot2::labs(x = "", y = "", fill = "QC Code") +
+    ggplot2::scale_fill_manual(values = qc_code_col_scale) +
+    ggplot2::theme_classic() +
+    ggplot2::theme(axis.line = ggplot2::element_blank())
+  
+  return(p2)
+}
+
+plot_device_ts <- function(data, var_ref_id, FUN = median, days_offset = 184) {
+  sel_vars <- var_ref_id
+  
+  device_pos <- decode_var_ref(sel_vars) |> 
+    dplyr::mutate(var_ref_id = sel_vars) |> 
+    dplyr::arrange(dplyr::desc(value_m))
+  
+  # Device Plot
+  p3 <- data |> 
+    dplyr::filter(var_ref_id %in% sel_vars) |>
+    dplyr::mutate(var_ref_id = factor(var_ref_id, levels = device_pos$var_ref_id)) |>
+    ggplot2::ggplot(ggplot2::aes(x = datetime, y = var_ref_id, fill = device_id)) +
+    ggplot2::geom_raster() +
+    ggplot2::labs(x = "", y = "", fill = "Device") +
+    ggplot2::scale_fill_brewer(palette = "Paired") +
+    ggplot2::theme_classic() +
+    ggplot2::theme(axis.line = ggplot2::element_blank())
+  
+  return(p3)
+}
+
 plot_var_ts_qc2 <- function(data, var_ref_id, FUN = median, days_offset = 184) {
   sel_vars <- var_ref_id
   
