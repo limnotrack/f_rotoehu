@@ -30,6 +30,7 @@ library(scattermore)
 library(sf)
 library(tmap)
 library(DT)
+library(patchwork)
 
 # Set tmap mode and basemap
 tmap_mode("view")
