@@ -193,10 +193,22 @@ qc_df <- data.frame(
   qc_code = qc_codes,
   qc_zone = names(qc_codes),
   qc_code_col = unname(qc_code_col_scale),
+  qc_code_desc = c(
+    "Data are missing", 
+    "Data are raw or of unknown quality",
+    "Data are synthetic or derived from other data or has been corrected for baseline drift or noise",
+    "Data that have been compromised in their ability to represent the true value of the measurement",
+    "Measured data that do not meet operational standards/best practice at the time of acquisition, and/or undergone significant modification. The data are considered to be a fair representation of the monitored parameter.",
+    "Data measured using best practice that meets operational standards at the time of acquisition. The data are considered to be a good representation of the monitored parameter."
+  ),
   stringsAsFactors = FALSE
 )
 
 qc_df |> 
+  select(qc_code, qc_zone, qc_code_desc) |>
+  rename(`Quality Control Code` = qc_code,
+         `Quality Control Zone` = qc_zone,
+         `Description` = qc_code_desc) |>
   datatable(rownames = FALSE,
             options = list(
               pageLength = 6,
@@ -205,10 +217,23 @@ qc_df |>
             )
   ) |> 
   formatStyle(
-    'qc_code_col',
-    target = 'row',
-    backgroundColor = styleEqual(qc_code_col_scale, qc_code_col_scale)
-  )
+    "Quality Control Code",
+    target = "row",
+    backgroundColor = styleEqual(
+      qc_df$qc_code,
+      qc_df$qc_code_col
+    )
+  ) |> 
+  # Bold all text
+  formatStyle(
+    columns = c("Quality Control Code", "Quality Control Zone", "Description"),
+    color = "white"
+  ) |> 
+  # BOld first column
+  formatStyle(
+    columns = "Quality Control Code",
+    fontWeight = "bold"
+  ) 
   
 ```
 
