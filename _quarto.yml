@@ -8,14 +8,12 @@ website:
     left:
       - text: "Home"
         href: index.qmd
-      - text: "QA/QC"
-        href: rotoehu-qc.qmd
       - text: "Data Summary"
         href: rotoehu-qc-summary.qmd
       - text: "Metadata"
         href: metadata.qmd
-      - text: "About"
-        href: index.qmd
+      - text: "QA/QC"
+        href: rotoehu-qc.qmd
 
 format:
   html:
