@@ -517,7 +517,7 @@ plot_var_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
   return(g)
 }
 
-plot_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
+plot_var_qc <- function(data, var_ref_id) {
   sel_vars <- var_ref_id
   
   device_pos <- decode_var_ref(sel_vars) |> 
@@ -547,7 +547,7 @@ plot_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
 }
 
 
-plot_qc_code <- function(data, var_ref_id, FUN = median, days_offset = 184) {
+plot_qc_code_ts <- function(data, var_ref_id, FUN = median, days_offset = 184) {
   sel_vars <- var_ref_id
   
   device_pos <- decode_var_ref(sel_vars) |> 
