@@ -2195,14 +2195,10 @@ Plot each variable
 #| fig.cap: "Temperature data at various depths quality control."
 #| warning: false
 #| message: false
-#| eval: false
+#| eval: true
 #| fig.height: 10
 
-p <- plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000",
-                                         "t_wtr_d1050", "t_wtr_d150",
-                                         "t_wtr_d300", "t_wtr_d50",
-                                         "t_wtr_d500", "t_wtr_d700", 
-                                         "t_wtr_d900"))
+p <- plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
 print(p)
 
 ```
