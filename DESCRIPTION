@@ -9,7 +9,7 @@ Authors@R: c(
          email = "chris@limnotrack.com",
          comment = c(ORCID = "0000-0001-5784-9767")))
 Description: Data product for Lake Rotoehu
-License: MIT + file LICENSE
+License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

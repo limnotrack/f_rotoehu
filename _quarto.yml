@@ -14,6 +14,8 @@ website:
         href: metadata.qmd
       - text: "QA/QC"
         href: rotoehu-qc.qmd
+      - text: "License"
+        href: LICENSE.md
 
 format:
   html:
