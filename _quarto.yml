@@ -16,11 +16,26 @@ website:
         href: rotoehu-qc.qmd
       - text: "License"
         href: LICENSE.md
+        
+  # sidebar:
+  #   style: "docked"   # options: floating, docked, overlay
+  #   search: true
+  #   contents:
+  #     - section: "Main"
+  #       contents:
+  #         - text: "Home"
+  #           href: index.qmd
+  #         - text: "Data Summary"
+  #           href: rotoehu-qc-summary.qmd
+  #         - text: "License"
+  #           href: LICENSE.md
 
 format:
   html:
-    theme: cosmo
-    toc: true
+    theme:
+      - cosmo
+      - custom.scss
+    toc: false
     favicon: assets/favicon.ico
 
 execute:
