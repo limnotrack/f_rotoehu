@@ -2165,6 +2165,27 @@ met <- raw_long_device_filt |>
 # Visual summaries
 
 ```{r}
+#| label: load-data-restart
+#| echo: false
+#| include: false
+#| eval: false
+
+# Load the data
+data_wide <- read_csv("rotoehu_data/rotoehu_qc.csv", col_types = cols())
+
+
+data <- data_wide |> 
+    pivot_longer(
+        cols = matches("^(qc_value|qc_code|qc_flag)_"),
+        names_to = c(".value", "var_ref_id"),
+        names_pattern = "^(qc_value|qc_code|qc_flag)_(.+)$"
+    )
+
+
+```
+
+
+```{r}
 #| label: review-data
 #| include: false
 #| echo: false
