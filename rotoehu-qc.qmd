@@ -2179,7 +2179,13 @@ data <- data_wide |>
         cols = matches("^(qc_value|qc_code|qc_flag)_"),
         names_to = c(".value", "var_ref_id"),
         names_pattern = "^(qc_value|qc_code|qc_flag)_(.+)$"
-    )
+    ) |> 
+  # Map site devices to data
+  map_data_to_devices(site_devices = site_devices,
+                      device_var = device_var,
+                      device_position = device_position,
+                      variables = variable_ref
+                      ) 
 
 
 ```
@@ -2218,17 +2224,12 @@ Plot each variable
 #| message: false
 #| eval: true
 #| fig.height: 10
-#| fig.show: "hold"
 
-# p1 <- plot_var_qc(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
-
-p2 <- plot_qc_code_ts(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
-
-# p3 <- plot_device_ts(data = data, var_ref_id = c("t_wtr_d100", "t_wtr_d1000"))
-
-# print(p1)
-print(p2)
-# print(p3)
+plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d50", "t_wtr_d100", 
+                                           "t_wtr_d150", "t_wtr_d300",
+                                           "t_wtr_d500", "t_wtr_d700",
+                                           "t_wtr_d900","t_wtr_d1000",
+                                           "t_wtr_d1050"))
 
 ```
 

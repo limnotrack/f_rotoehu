@@ -474,7 +474,12 @@ plot_var_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
   # QC Plot
   p2 <- data |> 
     dplyr::filter(var_ref_id %in% sel_vars) |>
-    dplyr::mutate(var_ref_id = factor(var_ref_id, levels = device_pos$var_ref_id)) |>
+    dplyr::mutate(var_ref_id = factor(var_ref_id, levels = device_pos$var_ref_id),
+                  datetime = as.Date(datetime)) |>
+    dplyr::group_by(datetime, var_ref_id) |>
+    dplyr::summarise(qc_code = qc_code[1], .groups = "drop") |>
+    dplyr::mutate(datetime = as.POSIXct(datetime, 
+                                        format = "%Y-%m-%d", tz = "UTC")) |> 
     ggplot2::ggplot(ggplot2::aes(x = datetime, y = var_ref_id, fill = qc_code)) +
     ggplot2::geom_raster() +
     ggplot2::labs(x = "", y = "", fill = "QC Code") +
@@ -485,7 +490,12 @@ plot_var_ts_qc <- function(data, var_ref_id, FUN = median, days_offset = 184) {
   # Device Plot
   p3 <- data |> 
     dplyr::filter(var_ref_id %in% sel_vars) |>
-    dplyr::mutate(var_ref_id = factor(var_ref_id, levels = device_pos$var_ref_id)) |>
+    dplyr::mutate(var_ref_id = factor(var_ref_id, levels = device_pos$var_ref_id),
+                  datetime = as.Date(datetime)) |>
+    dplyr::group_by(datetime, var_ref_id) |>
+    dplyr::summarise(device_id = device_id[1], .groups = "drop") |>
+    dplyr::mutate(datetime = as.POSIXct(datetime, 
+                                        format = "%Y-%m-%d", tz = "UTC")) |> 
     ggplot2::ggplot(ggplot2::aes(x = datetime, y = var_ref_id, fill = device_id)) +
     ggplot2::geom_raster() +
     ggplot2::labs(x = "", y = "", fill = "Device") +
