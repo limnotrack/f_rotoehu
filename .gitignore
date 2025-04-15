@@ -6,5 +6,8 @@ create_metadata.R
 data-raw
 rotoehu_data
 rotoehu_data.zip
-
 /.quarto/
+rotoehu_data_qc
+rotoehu_data_qc.zip
+rotoehu_data_raw
+template.qmd
