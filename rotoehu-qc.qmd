@@ -15,6 +15,15 @@ tbl-cap-location: top
 ---
 
 ```{r}
+#| label: setup
+
+unlink("data-raw", force = TRUE, recursive = TRUE)
+
+
+```
+
+
+```{r}
 #| label: load-libraries
 #| include: false
 library(dplyr)
@@ -55,15 +64,13 @@ R using the `piggyback` package. The data are stored in the `data-raw` folder.
 #| warning: false
 #| cache: true
 
-unlink("data-raw", force = TRUE, recursive = TRUE)
 dir.create("data-raw", showWarnings = FALSE)
 # Hydrotel data
 piggyback::pb_download(
   file = "rotoehu_data_raw.zip",
   dest = ".",
   repo = "limnotrack/f_rotoehu",
-  tag = "v0.0.1",
-  .token = Sys.getenv("GH_PAT")
+  tag = "v0.0.1"
 )
 
 # Unzip the file to tempdir
