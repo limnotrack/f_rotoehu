@@ -55,16 +55,30 @@ R using the `piggyback` package. The data are stored in the `data-raw` folder.
 #| warning: false
 #| cache: true
 
+unlink("data-raw", force = TRUE, recursive = TRUE)
 dir.create("data-raw", showWarnings = FALSE)
 # Hydrotel data
 piggyback::pb_download(
-  file = "rotoehu_sftp_compiled_raw.csv",
-  dest = "data-raw/",
+  file = "rotoehu_data_raw.zip",
+  dest = ".",
   repo = "limnotrack/f_rotoehu",
   tag = "v0.0.1",
   .token = Sys.getenv("GH_PAT")
 )
 
+# Unzip the file to tempdir
+tmp_dir <- tempdir()
+unzip("rotoehu_data_raw.zip", exdir = tmp_dir)
+
+# Move files into data-raw
+file.copy(list.files(file.path(tmp_dir, "rotoehu_data_raw"), full.names = TRUE),
+          "data-raw", overwrite = TRUE)
+
+# Delete zip file
+unlink("rotoehu_data_raw.zip", force = TRUE)
+
+
+# Read in raw data
 dat <- read_csv("data-raw/rotoehu_sftp_compiled_raw.csv") |> 
   mutate(datetime = as_datetime(Date)) |> 
   filter(datetime >= as_datetime("2011-04-27 00:00:00")) |>
@@ -357,7 +371,7 @@ col_mapping <- c(
   "t_wtr_d1000" = "do_temp_10m",
   "t_wtr_d1050" = "temperature_10.5m",
   "c_ph_d100" = "isfet_ph",
-  "c_phraw_d100" = "ph_raw",
+  "c_ph_raw_d100" = "ph_raw",
   
   "t_air_h150" = "air_temp",
   "pr_baro_h150" = "barometric_pressure", 
@@ -395,7 +409,8 @@ Map each sensor onto each data point.
 #| echo: false
 #| eval: false
 
-raw <- read_csv("data-raw/rotoehu_sftp_compiled_raw_level1.csv")
+raw <- read_csv("data-raw/rotoehu_sftp_compiled_raw_level1.csv",
+                col_types = cols())
 
 ```
 
@@ -890,8 +905,7 @@ fluor_df <- raw_long_device_filt |>
   apply_adjustment("f_chl_d100",
                    FUN = \(x) ifelse(x <= 1, NA, x)) |> 
   apply_adjustment("f_chl_d100",
-                   FUN = \(x) ifelse(x >= 499, NA, x))  
-
+                   FUN = \(x) ifelse(x >= 499, NA, x))
 
 # viz_data(data = fluor_df, var_abbr = "var_ref_id",
 #          site_events = site_events,
@@ -940,6 +954,7 @@ sensor_scales <- sensor_scaling |>
 raw_v <- raw_chl |> 
   left_join(sensor_scales, by = c("device_id", "datetime" = "date")) |> 
   tidyr::fill(offset, multiplier, .direction = "down") |> 
+  filter(!duplicated(datetime)) |>
   mutate(qc_value = (raw_value - offset) / multiplier, var_ref_id = "f_chl_d100_raw_V") |> 
   apply_adjustment("f_chl_d100_raw_V",
                    FUN = \(x) ifelse(x > 50, NA, x)) |>
@@ -989,6 +1004,12 @@ raw_v <- raw_chl |>
   update_qc_code(var_ref_id = "f_chl_d100_raw_V", date_range = c("2018-04-23 07:17:40", "2019-12-20 03:49:08"),
                  value_range = c(0, 0.02), filter_type = "both", qc_code = "QC 200")
 
+# Check for duplicates
+# raw_v |> 
+#   group_by(datetime, var_ref_id) |> 
+#   summarise(n = n()) |> 
+#   filter(n > 1) 
+
 
 chla_corr <- raw_v |> 
   update_qc_code(var_ref_id = "f_chl_d100_raw_V", date_range = c("2013-06-25 21:22:59", "2013-10-23 01:19:33"),
@@ -1002,6 +1023,7 @@ chla_corr <- raw_v |>
   mutate(qc_value = qc_value * 10,
          var_ref_id = "f_chl_d100"
   )
+
 
 chla_corr |> 
   plot_sensor(var_ref_id = "f_chl_d100",
@@ -2196,6 +2218,16 @@ data <- data_wide |>
 
 ```
 
+```{r}
+# heck for duplicate values
+dups1 <- data |> 
+  group_by(datetime, var_ref_id) |> 
+  summarise(n = n()) |> 
+  filter(n > 1)
+
+```
+
+
 
 ```{r}
 #| label: review-data
@@ -2321,7 +2353,6 @@ for (v in sel_vars) {
 :::
 
 
-
 # Download data
 
 Download the data as a zip folder. The data is in wide format an comes with
@@ -2335,7 +2366,7 @@ the quality control.
 #| eval: false
 
 # Create directory for rotoehu data
-path <- "rotoehu_data"
+path <- "rotoehu_data_qc"
 unlink(path, recursive = TRUE)
 unlink(paste0(path, ".zip"))
 
@@ -2409,7 +2440,7 @@ write_csv(variable_ref, file = file.path(path, "variables.csv"), na = "")
 write_csv(qc_filters, file = file.path(path, "qc_filters.csv"), na = "")
 
 # zip the folder into a zip folder
-zip(zipfile = "rotoehu_data.zip", files = path)
+zip(zipfile = "rotoehu_data_qc.zip", files = path)
 
 ```
 
@@ -2420,7 +2451,7 @@ zip(zipfile = "rotoehu_data.zip", files = path)
 #| eval: false
 
 piggyback::pb_upload(
-  "rotoehu_data.zip",
+  "rotoehu_data_qc.zip",
   repo = "limnotrack/f_rotoehu",
   tag = "v0.0.1", 
   overwrite = TRUE, 
