@@ -1,2 +1,0 @@
-site,location,type,customer,lon,lat,elev,key,Comms,Comms_address,SIM_provider,SIM_id,SIM_cellnum,level_default,depth_profile_surface,depth_profile_bottom,depth_profile_max,datetime_started,Anchor1_Lon,Anchor1_Lat,Anchor2_Lon,Anchor2_Lat,Anchor3_Lon,Anchor3_Lat,Notes
-f_Rotoehu,Rotoehu,Fixed,BoPRC,176.53055555555557,-38.01722222222222,303,-,BOPRC,-,-,NA,NA,NA,NA,NA,NA,40660.9375,NA,NA,NA,NA,NA,NA,NA
