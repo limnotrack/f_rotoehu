@@ -1041,7 +1041,7 @@ Compare field measurements to sensor data.
 #| label: fig-compare-field-measurements
 #| fig.cap: Compare field measurements to sensor data.
 
-field <- read_csv("data/rotoehu_field_data.csv") |> 
+field <- read_csv("data-raw/rotoehu_field_data.csv") |> 
   mutate(Date2 = as.Date(Date))
 
 chla <- field |> 
