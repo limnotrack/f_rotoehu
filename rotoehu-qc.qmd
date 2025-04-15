@@ -42,45 +42,12 @@ source("R/qc_funs.R")
 
 ```
 
-## Load in metadata
-
-Load metadata about the site, site events, devices, and variables. This includes
-the site location, device IDs, variable names, and sensor calibration data.
-
-```{r}
-#| label: load-metadata
-#| include: false
-#| echo: true
-#| cache: true
-
-site_sel <- "f_Rotoehu"
-site <- read_csv("data/site.csv")
-site_events <- read_csv("data/site_events.csv")
-site_devices <- read_csv("data/site_devices.csv")
-
-device_var <- read_csv("data/device_variable.csv")
-
-device_position <- read_csv("data/device_position.csv")
-
-sensor_reference <- read_csv("data/sensor_reference.csv")
-
-sensor_calibrations <- read_csv("data/sensor_calibrations.csv")
-sensor_scaling <- read_csv("data/sensor_scaling.csv")
-
-variable_ref <- read_csv("data/variables.csv")
-
-qc_filters <- read_csv("data/qc_filters.csv")
-
-sensor_map <- site_devices |> 
-  select(site, device_id, date_from, date_to) |> 
-  left_join(device_var, by = "device_id") |> 
-  left_join(device_position, by = "device_id") |>
-  mutate(var_ref_id = generate_var_ref(var_abbr, z_relative, reference)) 
-sensor_map
-
-```
-
 ### Load data
+
+The raw data was downloaded from the Bay of Plenty hydroTel SFTP server. The 
+data were then collated into a CSV file which can be downloaded from 
+[GitHub](https://github.com/limnotrack/f_rotoehu/releases/tag/v0.0.1) or within
+R using the `piggyback` package. The data are stored in the `data-raw` folder.
 
 ```{r}
 #| label: load-data
@@ -105,6 +72,45 @@ dat <- read_csv("data-raw/rotoehu_sftp_compiled_raw.csv") |>
 
 
 ```
+
+### Load metadata
+
+Load metadata about the site, site events, devices, and variables. This includes
+the site location, device IDs, variable names, and sensor calibration data.
+
+```{r}
+#| label: load-metadata
+#| include: true
+#| echo: true
+#| cache: true
+
+site_sel <- "f_Rotoehu"
+site <- read_csv("data-raw/site.csv")
+site_events <- read_csv("data-raw/site_events.csv")
+site_devices <- read_csv("data-raw/site_devices.csv")
+
+device_var <- read_csv("data-raw/device_variable.csv")
+
+device_position <- read_csv("data-raw/device_position.csv")
+
+sensor_reference <- read_csv("data-raw/sensor_reference.csv")
+
+sensor_calibrations <- read_csv("data-raw/sensor_calibrations.csv")
+sensor_scaling <- read_csv("data-raw/sensor_scaling.csv")
+
+variable_ref <- read_csv("data-raw/variables.csv")
+
+qc_filters <- read_csv("data-raw/qc_filters.csv")
+
+sensor_map <- site_devices |> 
+  select(site, device_id, date_from, date_to) |> 
+  left_join(device_var, by = "device_id") |> 
+  left_join(device_position, by = "device_id") |>
+  mutate(var_ref_id = generate_var_ref(var_abbr, z_relative, reference)) 
+sensor_map
+
+```
+
 
 ```{r}
 #| label: delete-raw-data
