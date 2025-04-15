@@ -100,7 +100,7 @@ The device position is stored in a CSV file. The file contains the following col
 
 ```{r}
 #| label: device-position
-#| result: hide
+#| results: hide
 
 device_position <- read_csv("rotoehu_data_qc/device_position.csv", col_types = cols())
 device_position
@@ -134,7 +134,7 @@ The device variable is stored in a CSV file. The file contains the following col
 
 ```{r}
 #| label: device-variable
-#| result: hide
+#| results: hide
 
 device_variable <- read_csv("rotoehu_data_qc/device_variable.csv", col_types = cols())
 device_variable
@@ -177,7 +177,7 @@ The quality control filters are stored in a CSV file. The file contains the foll
 
 ```{r}
 #| label: qc-filters
-#| result: hide
+#| results: hide
 
 qc_filters <- read_csv("rotoehu_data_qc/qc_filters.csv", col_types = cols())
 
@@ -213,7 +213,7 @@ The sensor calibrations are stored in a CSV file. The file contains the followin
 
 ```{r}
 #| label: sensor-calibrations
-#| result: hide
+#| results: hide
 
 sensor_calibrations <- read_csv("rotoehu_data_qc/sensor_calibrations.csv", col_types = cols())
 
@@ -255,11 +255,14 @@ The sensor reference is stored in a CSV file. The file contains the following co
 
 -   `units_sensor`: The units of the measured value.
 
--   `temperature`: The temperature of the reference measurement. - `comment`: The comment for the reference measurement.
+-   `temperature`: The temperature of the reference measurement. 
+
+-   `comment`: The comment for the reference measurement.
+
 
 ```{r}
 #| label: sensor-reference
-#| result: hide
+#| results: hide
 
 sensor_reference <- read_csv("rotoehu_data_qc/sensor_reference.csv", col_types = cols())
 
@@ -305,7 +308,7 @@ The sensor scaling is stored in a CSV file. The file contains the following colu
 
 ```{r}
 #| label: sensor-scaling
-#| result: hide
+#| results: hide
 
 sensor_scaling <- read_csv("rotoehu_data_qc/sensor_scaling.csv", col_types = cols())
 
@@ -348,7 +351,7 @@ The site devices are stored in a CSV file. The file contains the following colum
 
 ```{r}
 #| label: site-devices
-#| result: hide
+#| results: hide
 
 site_devices <- read_csv("rotoehu_data_qc/site_devices.csv", col_types = cols())
 
@@ -391,7 +394,7 @@ The site events are stored in a CSV file. The file contains the following column
 
 ```{r}
 #| label: site-events
-#| result: hide
+#| results: hide
 
 site_events <- read_csv("rotoehu_data_qc/site_events.csv", col_types = cols())
 
@@ -436,7 +439,7 @@ The sites are stored in a CSV file. The file contains the following columns:
 
 ```{r}
 #| label: sites
-#| result: hide
+#| results: hide
 
 sites <- read_csv("rotoehu_data_qc/sites.csv", col_types = cols())
 
@@ -472,7 +475,7 @@ The variables are stored in a CSV file. The file contains the following columns:
 
 ```{r}
 #| label: variables
-#| result: hide
+#| results: hide
 
 variables <- read_csv("rotoehu_data_qc/variables.csv", col_types = cols())
 
