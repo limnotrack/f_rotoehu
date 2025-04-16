@@ -733,61 +733,61 @@ format:
     {
       "type": "DataDownload",
       "name": "device_position",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "device_variable",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "qc_filters",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "rotoehu_qc",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "sensor_calibrations",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "sensor_reference",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "sensor_scaling",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "site_devices",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "site_events",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "variables",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     }
   ]
@@ -1474,52 +1474,52 @@ format:
     <tr>
       <td><code>device_position</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>device_variable</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>qc_filters</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>rotoehu_qc</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>sensor_calibrations</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>sensor_reference</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>sensor_scaling</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>site_devices</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>site_events</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
     <tr>
       <td><code>variables</code></td>
       <td><code>csv</code></td>
-      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip">Download</a></td>
+      <td><a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip">Download</a></td>
     </tr>
   </tbody>
 </table>
