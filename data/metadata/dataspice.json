@@ -704,61 +704,61 @@
     {
       "type": "DataDownload",
       "name": "device_position",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "device_variable",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "qc_filters",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "rotoehu_qc",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "sensor_calibrations",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "sensor_reference",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "sensor_scaling",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "site_devices",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "site_events",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     },
     {
       "type": "DataDownload",
       "name": "variables",
-      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip",
+      "contentUrl": "https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip",
       "encodingFormat": "csv"
     }
   ]
