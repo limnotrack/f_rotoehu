@@ -446,15 +446,15 @@ Convert wide dataframe to standardised long format.
 #| label: pivot-wide-to-long-devices
 
 raw_long <- raw |> 
-  pivot_longer(cols = -datetime, names_to = "var_ref_id", values_to = "raw_value") 
+  select(-c(battery_voltage, wind_speed_test, wind_speed)) |> 
+  pivot_longer(cols = -datetime, names_to = "var_ref_id", 
+               values_to = "raw_value") 
 
 # Conditional join raw_long with sensor_map using var_ref_id and when datetime is between date_from and date_to
-raw_long_device <- sensor_map |> 
-  group_by(device_id) |> 
-  left_join(raw_long, by = "var_ref_id") |>
-  filter(datetime >= date_from & datetime <= date_to) |> 
-  ungroup() |> 
-  arrange(device_id, datetime) |>
+raw_long_device <- map_data_to_devices(data = raw_long, 
+                                       site_devices = site_devices, 
+                                       device_var = device_var, 
+                                       device_position = device_position) |>
   mutate(qc_value = round(raw_value, 2),
          qc_flag = "", 
          qc_code = case_when(
@@ -464,7 +464,6 @@ raw_long_device <- sensor_map |>
   select(site, datetime, device_id, var_abbr, var_ref_id, raw_value, qc_value, 
          qc_flag, qc_code)
 
-head(raw_long_device)
 
 ```
 
@@ -708,15 +707,19 @@ is then mapped onto the reference points and corrected for drift.
 
 # viz_data(data = raw_long_device, variable = "var_ref_id",
 #          value = "qc_value")
-var_ref_id <- "c_phraw_d100"
+# var_ref_id <- "c_ph_d100"
+
+# data <- ph <- raw_long_device |> 
+#   filter(var_abbr %in% c("c_ph"))
+
 ph_count <- raw_long_device |> 
-  filter(var_abbr %in% c("c_phraw", "c_ph")) |>
-  apply_adjustment(var_ref_id = "c_phraw_d100", FUN = \(x) x / 10) |> 
-  scale_data(var_ref_id = "c_ph_d100", sensor_scaling) |> 
+  filter(var_abbr %in% c("c_ph_raw", "c_ph")) |>
+  apply_adjustment(var_ref_id = "c_ph_raw_d100", FUN = \(x) x / 10) |> 
+  scale_data(var_ref_id = "c_ph_d100", sensor_scaling) |>
   mutate(
     qc_value = case_when(
       datetime > as_datetime("2019-04-01") & 
-        var_ref_id == "c_phraw_d100" ~ NA,
+        var_ref_id == "c_ph_raw_d100" ~ NA,
       datetime > as_datetime("2016-03-02") & 
         var_ref_id == "c_ph_d100" ~ NA, 
       .default = qc_value
@@ -733,7 +736,7 @@ ph_count |>
             n = n()
   )
 
-# plotly_data(data = ph_count, y1 = "c_ph_d100", y2 = "c_phraw_d100", sub = 20)
+# plotly_data(data = ph_count, y1 = "c_ph_d100", y2 = "c_ph_raw_d100", sub = 20)
 
 
 sensor_refs <- sensor_reference |> 
@@ -767,7 +770,7 @@ Drift corrected pH values
 
 
 ph_raw <- ph_count |> 
-  filter(var_abbr %in% c("c_phraw")) |> 
+  filter(var_abbr %in% c("c_ph_raw")) |> 
   mutate(new_val = qc_value) |> 
   select(datetime, new_val)
 
@@ -801,12 +804,25 @@ ph_dc <- ph_dc |>
       is.na(qc_value) ~ "QC 200",
       .default = qc_code
     )
-  )
+  ) |> 
+  update_qc_code(var_ref_id = "c_ph_d100",
+                date_range = c("2014-05-06 23:21:10", "2014-12-19 15:48:58"),
+                filter_type = "date",
+                qc_code = "QC 200") 
 summary(ph_dc)
 
-# viz_data(data = ph_dc, var_abbr = "var_ref_id",
-#          site_events = site_events)
+ph_dc |> 
+  group_by(qc_code) |>
+  summarise(min = min(qc_value, na.rm = TRUE), 
+            mean_v = mean(raw_value, na.rm = TRUE),
+            mean = mean(qc_value, na.rm = TRUE),
+            max = max(qc_value, na.rm = TRUE),
+            n = n()
+  )
 
+# viz_data(data = ph_dc, variable = "var_ref_id",
+         # site_events = site_events)
+# 
 # plotly_data(ph_dc, y1 = "c_ph_d100", sub = 20)
 
 
@@ -815,7 +831,7 @@ ph_orig <- raw_long_device |>
   mutate(
     raw_value = case_when(
       # datetime > as_datetime("2019-04-01") & 
-      #   var_ref_id == "c_phraw_d100" ~ NA,
+      #   var_ref_id == "c_ph_raw_d100" ~ NA,
       datetime > as_datetime("2017-07-13") & 
         var_ref_id == "c_ph_d100" ~ NA, 
       .default = raw_value
@@ -833,6 +849,9 @@ ggplot() +
                                colour = "Drift corrected"), size = 0.2) +
   coord_cartesian(ylim = c(5, 10)) +
   theme_bw()
+
+# viz_data(data = ph_dc, variable = "var_ref_id",
+#          site_events = site_events)
 
 
 ```
@@ -856,7 +875,10 @@ raw_long_device2 <- raw_long_device |>
 # select(-c(raw_value.x, raw_value.y))
 
 # plotly_data(raw_long_device2, y1 = "c_ph_d100", sub = 20)
-
+raw_long_device2 |> 
+  group_by(datetime, var_ref_id) |>
+  summarise(n = n()) |> 
+  filter(n > 1) 
 
 ```
 
@@ -913,6 +935,8 @@ fluor_df <- raw_long_device_filt |>
                    FUN = \(x) ifelse(x <= 1, NA, x)) |> 
   apply_adjustment("f_chl_d100",
                    FUN = \(x) ifelse(x >= 499, NA, x))
+
+
 
 # viz_data(data = fluor_df, var_abbr = "var_ref_id",
 #          site_events = site_events,
@@ -1145,6 +1169,11 @@ phyc_corr |>
               sensor_reference = sensor_reference,
              sensor_scaling = sensor_scaling,
              clip_ylim = FALSE, colour = "qc_code")
+
+# phyc_corr |> 
+#   group_by(datetime, var_ref_id) |>
+#   summarise(n = n()) |> 
+#   filter(n > 1) 
 
 # viz_data(data = phyc_corr, var_abbr = "var_ref_id",
 #          site_events = site_events,
@@ -2227,7 +2256,7 @@ data <- data_wide |>
 
 ```{r}
 # heck for duplicate values
-dups1 <- data |> 
+dups1 <- phyc_corr |> 
   group_by(datetime, var_ref_id) |> 
   summarise(n = n()) |> 
   filter(n > 1)
@@ -2284,7 +2313,6 @@ plot_var_ts_qc(data = data, var_ref_id = c("t_wtr_d50", "t_wtr_d100",
 #| label: fig-oxygen-sat-doy-qc
 #| fig.cap: "Oxygen saturation data at 1 and 10m depths quality control."
 
-
 plot_var_ts_qc(data = data, var_ref_id = c("c_do_sat_d100", "c_do_sat_d1000"))
 
 ```
@@ -2297,6 +2325,7 @@ plot_var_ts_qc(data = data, var_ref_id = c("c_do_sat_d100", "c_do_sat_d1000"))
 plot_var_ts_qc(data = data, var_ref_id = c("c_do_d100", "c_do_d1000"))
 
 ```
+
 ## Chlorophyll
 
 ```{r}
@@ -2381,6 +2410,9 @@ unlink(paste0(path, ".zip"))
 # Write data and metadata to this directory
 dir.create(path, showWarnings = FALSE)
 
+data |> 
+  dplyr::summarise(n = dplyr::n(), .by = c(datetime, site, var_ref_id)) |>
+  dplyr::filter(n > 1L)
 data_qc_wide <- data |> 
   select(-raw_value, -device_id, -var_abbr) |> 
   pivot_wider(
@@ -2390,6 +2422,8 @@ data_qc_wide <- data |>
   ) 
 
 
+# dplyr::summarise(n = dplyr::n(), .by = c(datetime, site, var_ref_id)) |>
+#   dplyr::filter(n > 1L)
 # Reconvert back to long
 data_qc_long <- data_qc_wide |> 
   pivot_longer(
@@ -2445,6 +2479,9 @@ write_csv(sensor_calibrations, file = file.path(path,
 write_csv(sensor_scaling, file = file.path(path, "sensor_scaling.csv"), na = "")
 write_csv(variable_ref, file = file.path(path, "variables.csv"), na = "")
 write_csv(qc_filters, file = file.path(path, "qc_filters.csv"), na = "")
+dataspice::write_spice()
+
+generate_readme(files_path = path, output_path = path)
 
 # zip the folder into a zip folder
 zip(zipfile = "rotoehu_data_qc.zip", files = path)
@@ -2467,5 +2504,5 @@ piggyback::pb_upload(
 ```
 
 
-<a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data.zip" download class="btn btn-primary">Download Data</a>
+<a href="https://github.com/limnotrack/f_rotoehu/releases/download/v0.0.1/rotoehu_data_qc.zip" download class="btn btn-primary">Download Data</a>
 
