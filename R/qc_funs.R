@@ -848,8 +848,19 @@ scale_data <- function(data, var_ref_id, sensor_scaling) {
         )
       )
   }
+  
+  data |> 
+    dplyr::filter(is.na(offset) | is.na(multiplier)) |> 
+    head()
+  
   data <- data |> 
     dplyr::mutate(
+      # adj_value = dplyr::case_when(
+      #   var_ref_id %in% sel_vars ~ (qc_value - offset) / (multiplier),
+      #   # var_ref_id %in% sel_vars ~ (qc_value) / multiplier) - offset,
+      #   .default = qc_value
+      # ),
+      
       qc_value = dplyr::case_when(
         var_ref_id %in% sel_vars ~ (qc_value - offset) / (multiplier),
         # var_ref_id %in% sel_vars ~ (qc_value) / multiplier) - offset,
@@ -858,9 +869,25 @@ scale_data <- function(data, var_ref_id, sensor_scaling) {
       qc_code = dplyr::case_when(
         var_ref_id %in% sel_vars ~ "QC 300",
         TRUE ~ qc_code
+      ),
+      qc_flag = dplyr::case_when(
+        var_ref_id %in% sel_vars ~ format_flag(qc_flag, "scaled"),
+        TRUE ~ qc_flag
       )
     )
-  # plot(data$adj_value2, ylim = c(0, 1500))
+  # data |> 
+  #   dplyr::filter(var_ref_id %in% sel_vars) |>
+  #   ggplot() +
+  #   geom_point(aes(datetime, qc_value), pointsize = 0.8) +
+  #   geom_vline(data = sensor_scales, aes(xintercept = date, 
+  #                                        colour = factor(offset))) +
+  #   coord_cartesian(ylim = c(500, 800)) +
+  #   theme_bw()
+  
+  # data <- data |> 
+  #   dplyr::filter(var_ref_id %in% sel_vars, !is.na(adj_value))
+  # plot(data$datetime, data$adj_value, ylim = c(0, 1000))
+  # plot(data$datetime, data$raw_value, ylim = c(5, 12))
   
   # summary(data)
   return(data)
@@ -2734,8 +2761,11 @@ map_data_to_devices <- function(data, site_devices, device_var,
   sensor_map <- site_devices |> 
     dplyr::select(site, device_id, date_from, date_to) |> 
     dplyr::left_join(device_var, by = "device_id") |> 
+    dplyr::distinct(site, device_id, var_abbr, date_from, date_to) |>
     dplyr::left_join(device_position, by = "device_id", 
                      relationship = "many-to-many") |>
+    dplyr::distinct(site, device_id, var_abbr, date_from, date_to, reference,
+                    z_relative) |>
     dplyr::mutate(var_ref_id = generate_var_ref(var_abbr, z_relative, 
                                                 reference)) |> 
     dplyr::arrange(var_ref_id, date_from)
@@ -2749,12 +2779,94 @@ map_data_to_devices <- function(data, site_devices, device_var,
   
   sensor_map |> 
     dplyr::group_by(device_id) |> 
-    dplyr::left_join(data, by = c("var_ref_id", "site"), 
+    dplyr::left_join(data, by = c("var_ref_id"), 
                      relationship = "many-to-many") |>
     dplyr::filter(datetime >= date_from & datetime <= date_to) |> 
     dplyr::ungroup() |> 
     dplyr::arrange(var_ref_id, datetime) |> 
     dplyr::select(-c(date_from, date_to, reference, z_relative))
   
+}
+
+
+generate_readme <- function(metadata_path = "data/metadata/dataspice.json",
+    attributes_path = "data/metadata/attributes.csv",
+    access_path = "data/metadata/access.csv",
+    files_path,
+    output_path,
+    version = "v0.0.1",
+    include_description = TRUE
+) {
+  
+  meta <- metadata_path |> jsonlite::fromJSON()
+  attributes <- attributes_path |> readr::read_csv(show_col_types = FALSE)
+  access <- access_path |> readr::read_csv(show_col_types = FALSE)
+  
+  variable_summary <- attributes |>
+    dplyr::mutate(desc = paste0(variableName , ": ", description, " [file: ", fileName, ", units: ", unitText, "]")) |>
+    dplyr::pull(desc)
+  
+  variable_summary <- paste("-", variable_summary, collapse = "\n")
+  
+  authors <- paste0(meta$creator$name, collapse = ", ")
+  creator <- meta$creator$name[1]
+  contact <- meta$creator$email[1]
+  license <- meta$license[1]
+  
+  description <- meta$description
+  
+  files <- files_path |>
+    list.files(full.names = TRUE) |>
+    basename()
+  files <- paste0("- ", files) |>
+    paste(collapse = "\n")
+  
+  readme_text <- glue::glue(
+    "
+DATA PRODUCT README
+===================
+
+Title: {meta$name}
+Version: {version}
+Date Created: {Sys.Date()}
+Authors: {authors}
+License: {license}
+
+---
+
+DESCRIPTION
+-----------
+{description}
+---
+
+FILES INCLUDED
+--------------
+{files}
+- README.txt
+
+---
+
+VARIABLES
+---------
+{variable_summary}
+
+---
+
+USAGE
+-----
+Cite the dataset as:
+[Add citation here]
+
+License:
+This dataset is shared under a {license} license. See `data/metadata/access.csv` for details.
+
+Contact:
+{creator} – {contact}
+"
+  )
+  # cat(readme_text)
+  
+  
+  writeLines(readme_text, file.path(output_path, "README.txt"))
 }
 
