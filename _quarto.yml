@@ -12,10 +12,13 @@ website:
         href: rotoehu-qc-summary.qmd
       - text: "Metadata"
         href: metadata.qmd
-      # - text: "QA/QC"
-      #   href: rotoehu-qc.qmd
+      - text: "QA/QC"
+        href: rotoehu-qc.qmd
       - text: "License"
         href: LICENSE.md
+    right:
+      - icon: github
+        href: https://github.com/limnotrack/f_rotoehu
         
   # sidebar:
   #   style: "docked"   # options: floating, docked, overlay
