@@ -19,7 +19,6 @@ tbl-cap-location: top
 
 unlink("data-raw", force = TRUE, recursive = TRUE)
 
-
 ```
 
 
@@ -686,7 +685,10 @@ qc_df |>
   
 ```
 
-
+However, currently NEMS does not have a classification for chlorophyll-a 
+fluorescence or phycocyanin fluorescence sensors. We have therefore
+adapted the NEMS quality control codes to include these sensors, using similar
+checks and adjustments described in the [Processing of Environmental Time-series Data](https://www.nems.org.nz/documents/data-processing) (v1.2.0) document.
 
 # pH standardisation
 
@@ -924,6 +926,10 @@ raw_long_device_filt |>
 ```
 
 # Fluorescence sensors
+
+Chlorophyll and phycocyanin flurorescence sensors currently do not have a 
+NEMS classification. We will apply quality control methods to these data and 
+will use the same QC codes as other variables.
 
 ```{r}
 #| label: fig-fluorescence-sensors
